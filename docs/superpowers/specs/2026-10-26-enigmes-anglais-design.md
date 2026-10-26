@@ -32,17 +32,13 @@ toutes les 5 questions ; les bonus rapportent 190 écus fixes.
 
 Les chapitres suivent la **progression scolaire** au lieu de mélanger toutes les notions au même niveau :
 chaque énigme porte un champ `grade` (`"6e"`, `"5e"`, `"4e"`, `"3e"`), et le niveau `lvl` (1–5) et `grade`
-sont **non décroissants** dans l'ordre de jeu (à l'intérieur d'un chapitre, l'ordre peut varier d'un cran de `lvl`).
+sont **non décroissants** dans l'ordre de jeu. `grade` est déduit du chapitre (`GRADE_OF_CHAPTER`) ;
+`lvl` vaut 1 aux chapitres 1-2, 2 aux chapitres 3-4, 3 aux chapitres 5-6, 4 aux chapitres 7-8 et 5 au chapitre 9.
 
-| Chapitres | Classe | Notions principales |
-|---|---|---|
-| 1–2 | 6e (A1) | be, have got, pronoms sujets/compléments, adjectifs possessifs, génitif 's, pluriels réguliers/irréguliers, a/an/the, présent simple (3e personne, do/does), there is/are, can, impératif, was/were (fin d'année), questions en wh-, nombres, heure, dates |
-| 3–4 | 5e (A1+) | be + -ing (présent), présent simple vs be + -ing, prétérit régulier, irréguliers courants, dénombrables/indénombrables (some/any/much/many/a lot of), comparatif, must / have to, prépositions de lieu et de temps |
-| 5–6 | 4e (A2) | superlatif, futur (will, be going to), prétérit be + -ing, should / may / might, adverbes de manière et fréquence, pronoms réfléchis, question tags, pronoms possessifs |
-| 7–9 | 3e (A2/B1) | present perfect (for / since / already / yet / ever / never), used to, voix passive, conditionnels 1 et 2, discours indirect, relatives (who / which / that / whose), irréguliers avancés, faux amis |
-
-La liste sera vérifiée contre les repères annuels de progression publiés par Eduscol pour les langues vivantes
-(cycles 3 et 4) ; tout écart sera corrigé dans le tableau et documenté dans le README.
+Progression **vérifiée** contre les attendus de fin d'année Eduscol pour l'anglais (6e, 5e, 4e, 3e) :
+une notion est placée dans l'année où elle est attendue en production ; une notion seulement vue en lecture,
+ou visée au niveau le plus haut d'une année, est exercée l'année suivante. Le tableau détaillé des notions
+par classe est dans le README (section « Notions du programme »), qui fait référence.
 
 ### Catégories (8 × 12 = 96, + 10 bonus niveau expert)
 
@@ -59,7 +55,8 @@ La liste sera vérifiée contre les repères annuels de progression publiés par
 
 Chaque catégorie apparaît 1 ou 2 fois par chapitre ; les 3 types (`find`, `fill`, `type`) sont 32/32/32,
 3 ou 4 de chaque par chapitre (mêmes règles que l'original, appliquées par `tools/arrange.js` qui
-ordonne en plus par `grade` puis `lvl`).
+fixe les chapitres à la main via un champ `ch` : il vérifie les règles et ordonne chaque chapitre par `lvl`,
+en alternant les types).
 En 6e, `past` s'appuie sur was/were (fin de 6e, chapitre 2) et `future` sur can/impératif ; le chapitre 1
 peut donc avoir 0 énigme `past` (seule exception tolérée par le test).
 
@@ -80,7 +77,7 @@ peut donc avoir 0 énigme `past` (seule exception tolérée par le test).
 |---|---|
 | `index.html` | Titre, couleurs (rouge/bleu marine/or), lien source, `lang="fr"` |
 | `js/puzzles.js` | Nouveau contenu, `CATEGORIES`, `CHAPTER_NAMES`, champ `grade` |
-| `tools/arrange.js` | Tri par `grade` puis `lvl` avant les contraintes de répartition |
+| `tools/arrange.js` | Vérifie la répartition (chapitres fixés par `ch`) et ordonne chaque chapitre |
 | `js/shop.js` | Objets et dessins SVG britanniques |
 | `js/game.js` | Textes, normalisation des réponses anglaises, suppression barre d'accents, nom du fichier de sauvegarde `baker-street-sauvegarde-AAAA-MM-JJ.json` |
 | `test/check.js`, `test/e2e.js` | Adaptés (nouvelles contraintes `grade`, nouveaux libellés) |

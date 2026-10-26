@@ -1,0 +1,251 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later
+ * Baker Street & Co - Copyright (C) 2026 ZeBidule - GNU AGPL v3 or later, see LICENSE. */
+/* Vérifie la cohérence des énigmes, de la boutique et du moteur.
+   Lancer : node test/check.js */
+const assert = require("assert");
+const { ALL_PUZZLES, PUZZLES, CHAPTERS, CHAPTER_PLAN, CATEGORIES, GRADE_OF_CHAPTER } = require("../js/puzzles.js");
+const { ITEMS, DECOR_SLOTS, SLOT_NAMES, drawScene, drawGarden, drawPortrait } = require("../js/shop.js");
+const G = require("../js/game.js");
+
+const IDS = PUZZLES.map(p => p.id);
+const MAIN = PUZZLES.filter(p => !p.bonus);
+let n = 0;
+const t = (name, fn) => { fn(); n++; console.log("ok -", name); };
+
+t("96 énigmes, ids uniques, chacune une seule fois dans le plan", () => {
+  assert.strictEqual(ALL_PUZZLES.length, 96);
+  assert.strictEqual(new Set(ALL_PUZZLES.map(p => p.id)).size, 96);
+  assert.deepStrictEqual(CHAPTER_PLAN.flat().slice().sort(), ALL_PUZZLES.map(p => p.id).sort());
+  assert.strictEqual(MAIN.length, 96);
+  ALL_PUZZLES.forEach(p => { assert.ok(CATEGORIES[p.cat], p.id + " catégorie"); assert.ok(p.lvl >= 1 && p.lvl <= 5, p.id + " niveau"); });
+});
+
+t("8 catégories de 12 énigmes ; 1 ou 2 par chapitre (le passé peut manquer au chapitre 1)", () => {
+  assert.strictEqual(Object.keys(CATEGORIES).length, 8);
+  Object.keys(CATEGORIES).forEach(c => {
+    assert.strictEqual(MAIN.filter(p => p.cat === c).length, 12, c);
+    for (let ch = 1; ch <= 9; ch++) {
+      const k = MAIN.filter(p => p.ch === ch && p.cat === c).length;
+      const min = c === "past" && ch === 1 ? 0 : 1;
+      assert.ok(k >= min && k <= 2, `${c} chapitre ${ch} : ${k}`);
+    }
+  });
+});
+
+t("progression du programme : 6e → 5e → 4e → 3e, chaque chapitre dans sa classe", () => {
+  const order = ["6e", "5e", "4e", "3e"];
+  MAIN.forEach((p, i) => {
+    assert.strictEqual(p.grade, GRADE_OF_CHAPTER[p.ch], p.id);
+    if (i) assert.ok(order.indexOf(p.grade) >= order.indexOf(MAIN[i - 1].grade), `${MAIN[i - 1].id} → ${p.id}`);
+  });
+  order.forEach(g => assert.ok(MAIN.filter(p => p.grade === g).length >= 21, g));
+});
+
+t("difficulté : jamais en baisse d'un chapitre à l'autre, 1 au début, 5 à la fin", () => {
+  MAIN.forEach((p, i) => { if (i && MAIN[i - 1].ch < p.ch) assert.ok(p.lvl >= MAIN[i - 1].lvl, `${MAIN[i - 1].id} → ${p.id}`); });
+  assert.ok(MAIN.filter(p => p.ch === 1).every(p => p.lvl === 1));
+  assert.ok(MAIN.filter(p => p.ch === 9).every(p => p.lvl === 5));
+});
+
+t("types équilibrés : 32/32/32, et 3 ou 4 de chaque par chapitre", () => {
+  ["find", "fill", "type"].forEach(ty => {
+    assert.strictEqual(MAIN.filter(p => p.t === ty).length, 32, ty);
+    for (let ch = 1; ch <= 9; ch++) {
+      const k = MAIN.filter(p => p.ch === ch && p.t === ty).length;
+      assert.ok(k >= 3 && k <= 4, `${ty} chapitre ${ch} : ${k}`);
+    }
+  });
+});
+
+t("9 chapitres de 10 ou 11, difficulté jamais en baisse dans une catégorie", () => {
+  assert.strictEqual(CHAPTER_PLAN.length, 9);
+  CHAPTER_PLAN.forEach(ids => assert.ok(ids.length === 10 || ids.length === 11, "taille " + ids.length));
+  assert.ok(CHAPTERS[9]);
+  Object.keys(CATEGORIES).forEach(c => {
+    const ps = MAIN.filter(p => p.cat === c);
+    ps.forEach((p, i) => { if (i && ps[i - 1].ch < p.ch) assert.ok(p.lvl >= ps[i - 1].lvl, `${c} : ${ps[i - 1].id} → ${p.id}`); });
+  });
+  const avg = ch => MAIN.filter(p => p.ch === ch).reduce((a, p) => a + p.lvl, 0) / 10;
+  assert.ok(avg(9) > avg(1) + 2, "le dernier chapitre est nettement plus difficile que le premier");
+});
+
+t("l'histoire commence par p01 et finit par p96", () => {
+  assert.strictEqual(PUZZLES[0].id, "p01");
+  assert.strictEqual(MAIN[MAIN.length - 1].id, "p96");
+});
+
+t("aucun récit ne cite un ancien numéro de chapitre", () => {
+  ALL_PUZZLES.forEach(p => assert.ok(!/chapitre/i.test(p.story), p.id));
+});
+
+t("chaque énigme est complète et soluble", () => {
+  PUZZLES.forEach((p, i) => {
+    const id = `#${i + 1} ${p.title}`;
+    ["title", "story", "rule"].forEach(k => assert.ok(p[k], id + " " + k));
+    assert.ok(p.hints.length >= 2, id + " indices");
+    if (p.t === "find"){
+      const toks = G.tokens(p);
+      const bad = new Set(toks.map((x, k) => x.fix ? k : -1).filter(k => k >= 0));
+      assert.ok(bad.size >= 3, id + " au moins 3 fautes");
+      assert.ok(toks.every(x => !/[\[\]|]/.test(x.shown)), id + " marqueur mal formé affiché tel quel");
+      assert.strictEqual(bad.size, (p.text.match(/\[/g) || []).length, id + " chaque marqueur est reconnu");
+      assert.ok(!p.text.match(/\[[^\]]* [^\]]*\]/), id + " pas d'espace dans un marqueur");
+      assert.ok(G.checkAnswer(p, bad), id + " solution");
+      assert.ok(!G.checkAnswer(p, new Set([...bad].slice(1))), id + " incomplet refusé");
+    } else if (p.t === "fill"){
+      assert.strictEqual(p.parts.length, p.blanks.length + 1, id + " parts/blanks");
+      p.blanks.forEach((b, k) => {
+        assert.ok(b.o.includes(b.a), `${id} trou ${k + 1} : réponse dans les options`);
+        assert.strictEqual(new Set(b.o).size, b.o.length, `${id} trou ${k + 1} : options uniques`);
+      });
+      assert.ok(G.checkAnswer(p, p.blanks.map(b => b.a)), id + " solution");
+    } else {
+      assert.strictEqual(p.t, "type", id + " type connu");
+      assert.ok(p.sentence.includes("___") && p.q, id + " phrase");
+      assert.ok(G.checkAnswer(p, p.answers[0]), id + " solution");
+    }
+  });
+});
+
+/* L'énoncé (titre, histoire, consigne, phrase) ne doit pas donner la réponse. */
+const LEAK_ALLOWED = [];
+const strip = x => x.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const wordsOf = x => strip(x).split(/[^a-z\u0153]+/).filter(w => w.length >= 4);
+
+t("énoncé : la réponse n'apparaît ni dans le titre, ni dans l'histoire, ni dans la consigne", () => {
+  const leaks = [];
+  PUZZLES.forEach(p => {
+    const seen = new Set(wordsOf([p.title, p.story, p.q || "", p.sentence || ""].join(" ")));
+    let answers = [];
+    if (p.t === "find") answers = G.tokens(p).filter(x => x.fix).map(x => x.fix);
+    else if (p.t === "fill") answers = p.blanks.map(b => b.a);
+    else answers = p.answers;
+    let leak = answers.some(a => wordsOf(a).some(w => seen.has(w)));
+    if (p.t === "type" && /^(Corrige le mot|Écris correctement (le mot )?«)|ou «|pense au verbe/.test(p.q)) leak = true;
+    if (leak) leaks.push(p.id);
+  });
+  assert.deepStrictEqual(leaks.sort(), LEAK_ALLOWED.slice().sort(),
+    "énigmes qui donnent la réponse : " + leaks.join(", ") + " (autorisées : " + LEAK_ALLOWED.join(", ") + ")");
+});
+
+t("consignes : le nombre de lettres annoncé correspond à la réponse", () => {
+  let n = 0;
+  PUZZLES.filter(p => p.t === "type").forEach(p => {
+    const m = (p.q || "").match(/(\d+) lettres/);
+    if (!m) return;
+    n++;
+    assert.ok(p.answers.some(a => a.length === +m[1]), `${p.id} : ${m[1]} lettres, réponses ${p.answers}`);
+  });
+  assert.ok(n >= 8, "les consignes à indice de longueur existent");
+});
+
+t("licence : AGPL-3.0 (LICENSE complet, en-têtes SPDX, lien vers les sources dans le jeu)", () => {
+  const fs = require("fs"), root = __dirname + "/..";
+  const lic = fs.readFileSync(root + "/LICENSE", "utf8");
+  assert.ok(lic.includes("GNU AFFERO GENERAL PUBLIC LICENSE") && lic.includes("Version 3, 19 November 2007"));
+  assert.ok(lic.includes("13. Remote Network Interaction") && lic.length > 30000, "texte intégral");
+  ["index.html", "js/game.js", "js/puzzles.js", "js/shop.js", "test/check.js", "test/e2e.js", "tools/arrange.js"].forEach(f =>
+    assert.ok(fs.readFileSync(root + "/" + f, "utf8").slice(0, 1200).includes("SPDX-License-Identifier: AGPL-3.0-or-later"), f));
+  const html = fs.readFileSync(root + "/index.html", "utf8");
+  assert.ok(html.includes("https://github.com/ZeBidule/enigmes-anglais") && /class="legal"/.test(html), "lien code source");
+});
+
+t("première énigme simplifiée (3 fautes)", () => {
+  assert.strictEqual(G.tokens(PUZZLES[0]).filter(x => x.fix).length, 3);
+});
+
+t("saisie clavier : casse, espaces, ponctuation finale et apostrophe typographique tolérées", () => {
+  const p = PUZZLES.find(x => x.id === "p04");
+  assert.ok(G.checkAnswer(p, "  Doesn’t. "));
+  assert.ok(G.checkAnswer(p, "does not"));
+  assert.ok(!G.checkAnswer(p, "doesnt"));
+  assert.ok(!G.checkAnswer(p, "don't"));
+  assert.ok(G.checkAnswer(PUZZLES.find(x => x.id === "p11"), "Where?"));
+});
+
+t("écus : récompense et pénalité", () => {
+  const p = { lvl: 1 };
+  assert.strictEqual(G.baseValue(p), 15);
+  assert.strictEqual(G.afterMistake(p, 15), 12);
+  assert.strictEqual(G.afterMistake(p, 6), 6);
+});
+
+t("aucun reste du jeu d'orthographe (Plume & Cie)", () => {
+  const fs = require("fs");
+  const all = JSON.stringify(PUZZLES) + ["index.html", "js/game.js", "js/shop.js", "js/puzzles.js"].map(f => fs.readFileSync(__dirname + "/../" + f, "utf8")).join("");
+  ["plume", "dictée", "manuscrit", "picarat", "layton"].forEach(w => assert.ok(!all.toLowerCase().includes(w), w));
+});
+
+t("compléter les trous : aucune option vide", () => {
+  PUZZLES.filter(p => p.t === "fill").forEach(p => p.blanks.forEach(b => b.o.forEach(o => assert.ok(o.trim(), p.id))));
+});
+
+t("boutique et dessins", () => {
+  assert.strictEqual(new Set(ITEMS.map(i => i.id)).size, ITEMS.length);
+  const eq = { hat: "forme", coat: "cape", neck: "noeud", face: "monocle", hand: "loupe" };
+  const svg = drawScene(ITEMS.map(i => i.id), eq);
+  assert.ok(!/undefined|NaN/.test(drawPortrait({ hat: "explo", coat: "bleue" })), "deerstalker et trench-coat");
+  assert.ok(svg.startsWith("<svg") && svg.endsWith("</svg>"));
+  assert.ok(!/undefined|NaN/.test(svg + drawPortrait({})));
+  const garden = drawGarden(ITEMS.map(i => i.id));
+  assert.ok(garden.startsWith("<svg") && garden.endsWith("</svg>") && !/undefined|NaN/.test(garden));
+  assert.ok(drawGarden([]).startsWith("<svg"), "jardin vide affichable");
+});
+
+t("extérieur : objets de jardin et véhicules en vente, tous avec un nom de rubrique", () => {
+  assert.ok(ITEMS.filter(i => i.slot === "garden").length >= 6);
+  assert.ok(ITEMS.filter(i => i.slot === "vehicle").length >= 2);
+  ITEMS.forEach(i => assert.ok(SLOT_NAMES[i.slot], i.id));
+  assert.deepStrictEqual(DECOR_SLOTS, ["home", "garden", "vehicle"]);
+  // chaque objet de jardin modifie bien le dessin
+  ITEMS.filter(i => i.slot === "garden" || i.slot === "vehicle").forEach(i => assert.notStrictEqual(drawGarden([i.id]), drawGarden([]), i.id));
+});
+
+t("sauvegarde : export puis import identique", () => {
+  const s = { coins: 42, solved: ["p01", "p64", "p90", "b03"], owned: ["forme", "chat", "voiture"], equipped: { hat: "forme" } };
+  const back = G.importSave(G.exportSave(s), IDS, ITEMS);
+  assert.deepStrictEqual(back, s);
+});
+
+t("sauvegarde : fichiers invalides refusés, valeurs inconnues ignorées", () => {
+  assert.throws(() => G.importSave("pas du json", IDS, ITEMS), /pas une sauvegarde valide/);
+  assert.throws(() => G.importSave('{"coins":3}', IDS, ITEMS), /pas une sauvegarde de/);
+  assert.throws(() => G.importSave('{"format":"baker-street-save","coins":-5,"solved":[],"owned":[]}', IDS, ITEMS), /abîmée/);
+  const s = G.importSave(JSON.stringify({ format: "baker-street-save", coins: 1, solved: ["p04", "p04", "p999", "x"], owned: ["chat", "fusee", "ballon"],
+    equipped: { hat: "forme", home: "chat", vehicle: "ballon" } }), IDS, ITEMS);
+  assert.deepStrictEqual(s, { coins: 1, solved: ["p04"], owned: ["chat", "ballon"], equipped: {} });
+});
+
+t("économie : tout acheter avec 1 indice toutes les 5 questions, dès la fin de l'histoire", () => {
+  const gains = MAIN.reduce((a, p) => a + G.baseValue(p), 0) + G.START_COINS;
+  const hints = Math.floor(MAIN.length / 5) * G.HINT_COST;
+  const shop = ITEMS.reduce((a, i) => a + i.price, 0);
+  assert.ok(gains - hints >= shop, `budget ${gains - hints} < boutique ${shop}`);
+});
+
+t("économie : avec les bonus, tout est achetable dans le pire des cas (tous les indices, erreurs maximales)", () => {
+  const shop = ITEMS.reduce((a, i) => a + i.price, 0);
+  const worstGain = PUZZLES.reduce((a, p) => {
+    let v = G.baseValue(p);                       // on se trompe jusqu'à ce que la récompense ne baisse plus
+    for (let k = 0; k < 20; k++) v = G.afterMistake(p, v);
+    return a + v;
+  }, G.START_COINS);
+  const allHints = PUZZLES.reduce((a, p) => a + p.hints.length * G.HINT_COST, 0);
+  assert.ok(worstGain - allHints >= shop, `pire cas ${worstGain - allHints} < boutique ${shop}`);
+});
+
+t("bonus : 10 mystères difficiles après l'histoire, récompense fixe", () => {
+  const bonus = PUZZLES.filter(p => p.bonus);
+  assert.strictEqual(bonus.length, 10);
+  assert.deepStrictEqual(PUZZLES.slice(MAIN.length).map(p => p.id), bonus.map(p => p.id), "après les mystères de l'histoire");
+  bonus.forEach(p => { assert.strictEqual(p.ch, 10); assert.strictEqual(p.lvl, 5); assert.strictEqual(G.afterMistake(p, p.reward), p.reward); });
+  assert.ok(CHAPTERS[10].includes("Bonus"));
+  assert.ok(G.baseValue(bonus[0]) > G.baseValue(MAIN[MAIN.length - 1]), "un bonus rapporte plus qu'un mystère normal");
+});
+
+t("mode test : la solution fournie valide chacune des 106 énigmes", () => {
+  PUZZLES.forEach((p, i) => assert.ok(G.checkAnswer(p, G.solutionFor(p)), "#" + (i + 1)));
+  assert.strictEqual(G.TEST_PASSWORD, "tes1");
+});
+
+console.log(`\n${n} tests OK`);
