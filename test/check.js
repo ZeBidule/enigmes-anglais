@@ -4,7 +4,7 @@
    Lancer : node test/check.js */
 const assert = require("assert");
 const { ALL_PUZZLES, PUZZLES, CHAPTERS, CHAPTER_PLAN, CATEGORIES, GRADE_OF_CHAPTER } = require("../js/puzzles.js");
-const { ITEMS, DECOR_SLOTS, SLOT_NAMES, drawScene, drawGarden, drawPortrait } = require("../js/shop.js");
+const { ITEMS, DECOR_SLOTS, SLOT_NAMES, drawScene, drawStreet, drawPortrait, itemLocked } = require("../js/shop.js");
 const G = require("../js/game.js");
 
 const IDS = PUZZLES.map(p => p.id);
@@ -182,27 +182,47 @@ t("compléter les trous : aucune option vide", () => {
 
 t("boutique et dessins", () => {
   assert.strictEqual(new Set(ITEMS.map(i => i.id)).size, ITEMS.length);
-  const eq = { hat: "forme", coat: "cape", neck: "noeud", face: "monocle", hand: "loupe" };
+  const eq = { hat: "forme", coat: "tunique", neck: "ecossaise", face: "moustache", hand: "parapluie" };
   const svg = drawScene(ITEMS.map(i => i.id), eq);
-  assert.ok(!/undefined|NaN/.test(drawPortrait({ hat: "explo", coat: "bleue" })), "deerstalker et trench-coat");
+  ITEMS.filter(i => !DECOR_SLOTS.includes(i.slot)).forEach(i => {
+    const p = drawPortrait({ [i.slot]: i.id });
+    assert.ok(!/undefined|NaN/.test(p), i.id);
+    assert.notStrictEqual(p, drawPortrait({}), "tenue visible : " + i.id);
+  });
   assert.ok(svg.startsWith("<svg") && svg.endsWith("</svg>"));
-  assert.ok(!/undefined|NaN/.test(svg + drawPortrait({})));
-  const garden = drawGarden(ITEMS.map(i => i.id));
-  assert.ok(garden.startsWith("<svg") && garden.endsWith("</svg>") && !/undefined|NaN/.test(garden));
-  assert.ok(drawGarden([]).startsWith("<svg"), "jardin vide affichable");
+  assert.ok(!/undefined|NaN/.test(svg + drawPortrait({}) + drawScene([], {})));
+  const street = drawStreet(ITEMS.map(i => i.id));
+  assert.ok(street.startsWith("<svg") && street.endsWith("</svg>") && !/undefined|NaN/.test(street));
+  assert.ok(drawStreet([]).startsWith("<svg"), "rue vide affichable");
 });
 
-t("extérieur : objets de jardin et véhicules en vente, tous avec un nom de rubrique", () => {
-  assert.ok(ITEMS.filter(i => i.slot === "garden").length >= 6);
+t("décor : rue, appartement sur deux étages, véhicules", () => {
+  assert.ok(ITEMS.filter(i => i.slot === "street").length >= 6);
+  assert.ok(ITEMS.filter(i => i.slot === "upstairs").length >= 5);
+  assert.deepStrictEqual(ITEMS.filter(i => i.slot === "floor").map(i => i.id), ["etage"]);
   assert.ok(ITEMS.filter(i => i.slot === "vehicle").length >= 2);
   ITEMS.forEach(i => assert.ok(SLOT_NAMES[i.slot], i.id));
-  assert.deepStrictEqual(DECOR_SLOTS, ["home", "garden", "vehicle"]);
-  // chaque objet de jardin modifie bien le dessin
-  ITEMS.filter(i => i.slot === "garden" || i.slot === "vehicle").forEach(i => assert.notStrictEqual(drawGarden([i.id]), drawGarden([]), i.id));
+  assert.deepStrictEqual(DECOR_SLOTS, ["home", "floor", "upstairs", "street", "vehicle"]);
+  assert.deepStrictEqual(ITEMS.map(i => i.id).filter(id => ["forme", "beret", "chat", "ballon", "noeud"].includes(id)), ["forme"]);
+  // chaque objet de décor modifie bien le dessin
+  ITEMS.filter(i => i.slot === "street" || i.slot === "vehicle").forEach(i => assert.notStrictEqual(drawStreet([i.id]), drawStreet([]), i.id));
+  ITEMS.filter(i => i.slot === "home").forEach(i => assert.notStrictEqual(drawScene([i.id], {}), drawScene([], {}), i.id));
+  assert.notStrictEqual(drawScene(["etage"], {}), drawScene([], {}), "étage débloqué visible");
+  ITEMS.filter(i => i.slot === "upstairs").forEach(i => {
+    assert.notStrictEqual(drawScene(["etage", i.id], {}), drawScene(["etage"], {}), i.id);
+    assert.strictEqual(drawScene([i.id], {}), drawScene([], {}), "invisible sans l'étage : " + i.id);
+  });
+});
+
+t("1er étage : ses objets sont verrouillés tant qu'il n'est pas acheté", () => {
+  const up = ITEMS.find(i => i.slot === "upstairs"), other = ITEMS.find(i => i.slot === "home");
+  assert.strictEqual(itemLocked(up, []), true);
+  assert.strictEqual(itemLocked(up, ["etage"]), false);
+  assert.strictEqual(itemLocked(other, []), false);
 });
 
 t("sauvegarde : export puis import identique", () => {
-  const s = { coins: 42, solved: ["p01", "p64", "p90", "b03"], owned: ["forme", "chat", "voiture"], equipped: { hat: "forme" } };
+  const s = { coins: 42, solved: ["p01", "p64", "p90", "b03"], owned: ["forme", "corgi", "bus", "etage", "violon"], equipped: { hat: "forme" } };
   const back = G.importSave(G.exportSave(s), IDS, ITEMS);
   assert.deepStrictEqual(back, s);
 });
@@ -211,9 +231,13 @@ t("sauvegarde : fichiers invalides refusés, valeurs inconnues ignorées", () =>
   assert.throws(() => G.importSave("pas du json", IDS, ITEMS), /pas une sauvegarde valide/);
   assert.throws(() => G.importSave('{"coins":3}', IDS, ITEMS), /pas une sauvegarde de/);
   assert.throws(() => G.importSave('{"format":"baker-street-save","coins":-5,"solved":[],"owned":[]}', IDS, ITEMS), /abîmée/);
-  const s = G.importSave(JSON.stringify({ format: "baker-street-save", coins: 1, solved: ["p04", "p04", "p999", "x"], owned: ["chat", "fusee", "ballon"],
-    equipped: { hat: "forme", home: "chat", vehicle: "ballon" } }), IDS, ITEMS);
-  assert.deepStrictEqual(s, { coins: 1, solved: ["p04"], owned: ["chat", "ballon"], equipped: {} });
+  const s = G.importSave(JSON.stringify({ format: "baker-street-save", coins: 1, solved: ["p04", "p04", "p999", "x"], owned: ["corgi", "chat", "bus", "etage"],
+    equipped: { hat: "forme", home: "corgi", vehicle: "bus", floor: "etage" } }), IDS, ITEMS);
+  assert.deepStrictEqual(s, { coins: 1, solved: ["p04"], owned: ["corgi", "bus", "etage"], equipped: {} });
+});
+
+t("boutique : 2 130 écus au total", () => {
+  assert.strictEqual(ITEMS.reduce((a, i) => a + i.price, 0), 2130);
 });
 
 t("économie : tout acheter avec 1 indice toutes les 5 questions, dès la fin de l'histoire", () => {

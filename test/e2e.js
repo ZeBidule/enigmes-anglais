@@ -49,10 +49,10 @@ const url = `http://localhost:${server.address().port}/`;
   assert.strictEqual(await p.textContent(".big"), "Bravo !");
   await p.click(".overlay >> text=Maison");
   await p.click("text=Boutique");
-  await p.click(".shop-item:has-text('Nœud papillon') button");
+  await p.click(".shop-item:has-text('Cravate club rayée') button");
   const coins = await p.evaluate(() => JSON.parse(localStorage.getItem("baker-street-save-v1")).coins);
   assert.strictEqual(coins, 5 + 15 - 10);
-  console.log("ok - partie jouée : mystère 1 résolu, nœud papillon acheté");
+  console.log("ok - partie jouée : mystère 1 résolu, cravate achetée");
 
   // 2b. Réponse tapée au clavier (mystère 4) : apostrophe typographique acceptée, pas de barre d'accents
   const typeIdx = await p.evaluate(() => PUZZLES.findIndex(x => x.id === "p04"));
@@ -75,7 +75,7 @@ const url = `http://localhost:${server.address().port}/`;
   await dl.saveAs(file);
   const content = JSON.parse(fs.readFileSync(file, "utf8"));
   assert.match(dl.suggestedFilename(), /^baker-street-sauvegarde-\d{4}-\d\d-\d\d\.json$/);
-  assert.deepStrictEqual([content.solved, content.owned, content.equipped, content.coins], [["p01"], ["noeud"], { neck: "noeud" }, 10]);
+  assert.deepStrictEqual([content.solved, content.owned, content.equipped, content.coins], [["p01"], ["cravate"], { neck: "cravate" }, 10]);
   console.log("ok - fichier téléchargé :", dl.suggestedFilename());
 
   // 4. Navigateur vierge (autre appareil) : charger le fichier depuis l'écran titre
@@ -88,7 +88,7 @@ const url = `http://localhost:${server.address().port}/`;
   assert.match(await p.textContent(".money"), /10 écus/);
   assert.ok(await p.$("text=Mystère 2"), "mystère 2 débloqué");
   await p.click("text=Boutique");
-  assert.strictEqual(await p.textContent(".shop-item:has-text('Nœud papillon') button"), "Retirer");
+  assert.strictEqual(await p.textContent(".shop-item:has-text('Cravate club rayée') button"), "Retirer");
   console.log("ok - sauvegarde rechargée dans un navigateur vierge (mystères + objets portés)");
 
   // 5. Fichier invalide : message d'erreur, progression intacte
@@ -146,17 +146,23 @@ const url = `http://localhost:${server.address().port}/`;
   // 10. Écus illimités : achat sans débit
   const before = await p.evaluate(() => JSON.parse(localStorage.getItem("baker-street-save-v1")).coins);
   await p.evaluate(() => G.shop());
-  await p.click(".shop-item:has-text('Chat de compagnie') button");
+  assert.match(await p.textContent(".shop-item:has-text('Violon') button"), /Débloque d'abord le 1er étage/);
+  assert.ok(await p.isDisabled(".shop-item:has-text('Violon') button"), "objet du 1er étage verrouillé");
+  await p.evaluate(() => G.buy("violon"));
+  assert.ok(!(await p.evaluate(() => JSON.parse(localStorage.getItem("baker-street-save-v1")).owned)).includes("violon"), "achat forcé refusé");
+  await p.click(".shop-item:has-text('Corgi de compagnie') button");
   const after = await p.evaluate(() => JSON.parse(localStorage.getItem("baker-street-save-v1")));
-  assert.ok(after.owned.includes("chat"));
+  assert.ok(after.owned.includes("corgi"));
   assert.strictEqual(after.coins, before);
-  await p.click(".shop-item:has-text('Montgolfière') button");
+  await p.click(".shop-item:has-text('Bus rouge à impériale') button");
+  await p.click(".shop-item:has-text('1er étage de l') button");
+  await p.click(".shop-item:has-text('Violon') button");
   const g = await p.evaluate(() => JSON.parse(localStorage.getItem("baker-street-save-v1")));
-  assert.ok(g.owned.includes("ballon") && g.coins === before);
+  assert.ok(["bus", "etage", "violon"].every(id => g.owned.includes(id)) && g.coins === before);
   await p.evaluate(() => G.home());
   assert.strictEqual(await p.$$eval(".scene svg", x => x.length), 2, "maison + rue affichés");
   assert.ok(await p.$("svg[aria-label^='La rue']"));
-  console.log("ok - achats chat (110) et montgolfière (290) sans débit ; maison + rue affichés");
+  console.log("ok - 1er étage verrouillé puis débloqué ; achats corgi, bus, étage, violon sans débit ; appartement + rue affichés");
 
   // 11. Désactivation depuis le bouton 🔑
   await p.evaluate(() => G.title());

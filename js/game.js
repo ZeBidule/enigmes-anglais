@@ -75,7 +75,7 @@ function importSave(text, puzzleIds, items){
   const equipped = {};
   Object.entries(d.equipped || {}).forEach(([slot, id]) => {
     const it = items.find(i => i.id === id);
-    if (it && it.slot === slot && !["home", "garden", "vehicle"].includes(slot) && owned.includes(id)) equipped[slot] = id;
+    if (it && it.slot === slot && !["home", "floor", "upstairs", "street", "vehicle"].includes(slot) && owned.includes(id)) equipped[slot] = id;
   });
   return { coins: d.coins, solved, owned, equipped };
 }
@@ -171,7 +171,7 @@ if (typeof document !== "undefined") (function(){
     app.innerHTML = header() + `
       <div class="card">
         <div class="scene">${drawScene(save.owned, save.equipped)}</div>
-        <div class="scene" style="margin-top:8px">${drawGarden(save.owned)}</div>
+        <div class="scene" style="margin-top:8px">${drawStreet(save.owned)}</div>
         <h2 style="margin-top:10px">${GAME_SUBTITLE}</h2>
         <p>Le précieux dictionnaire de Sir Wordsworth a disparu ! Aide l'inspecteur Bramble à le retrouver
         dans les rues de Londres : chaque indice est piégé par des fautes d'anglais.</p>
@@ -214,20 +214,21 @@ if (typeof document !== "undefined") (function(){
       ITEMS.filter(it => it.slot === slot).forEach(it => {
         const own = save.owned.includes(it.id), worn = save.equipped[slot] === it.id;
         let btn;
-        if (!own) btn = `<button class="gold" ${save.coins < it.price && !save.test ? "disabled" : ""} onclick="G.buy('${it.id}')">🪙 ${it.price}</button>`;
+        if (!own && itemLocked(it, save.owned)) btn = `<button disabled>🔒 Débloque d'abord le 1er étage</button>`;
+        else if (!own) btn = `<button class="gold" ${save.coins < it.price && !save.test ? "disabled" : ""} onclick="G.buy('${it.id}')">🪙 ${it.price}</button>`;
         else if (DECOR_SLOTS.includes(slot)) btn = `<span>✔ Installé</span>`;
         else btn = `<button class="alt" onclick="G.wear('${it.id}')">${worn ? "Retirer" : "Porter"}</button>`;
         html += `<div class="shop-item"><span>${esc(it.name)}</span>${btn}</div>`;
       });
     });
     app.innerHTML = header() + `<div class="card"><div class="scene">${drawScene(save.owned, save.equipped)}</div>
-      <div class="scene" style="margin-top:8px">${drawGarden(save.owned)}</div></div>
+      <div class="scene" style="margin-top:8px">${drawStreet(save.owned)}</div></div>
       <div class="card"><h2>La boutique</h2><div class="meta">Gagne des écus en résolvant des mystères.</div>${html}
       <div class="bar"><button class="alt" onclick="G.home()">⟵ Maison</button></div></div>`;
   }
   function buy(id){
     const it = ITEMS.find(x => x.id === id);
-    if (!it || save.owned.includes(id) || !canPay(it.price)) return;
+    if (!it || save.owned.includes(id) || itemLocked(it, save.owned) || !canPay(it.price)) return;
     pay(it.price); save.owned.push(id);
     if (!DECOR_SLOTS.includes(it.slot)) save.equipped[it.slot] = id;
     persist(); shop();

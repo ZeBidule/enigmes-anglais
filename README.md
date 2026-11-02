@@ -27,9 +27,12 @@ C'est pour cette raison qu'un lien « Code source » apparaît en bas du jeu : i
   La casse et l'apostrophe typographique (’) ne comptent pas, et les deux formes sont acceptées quand elles sont correctes
   (`doesn't` / `does not`).
 - Chaque mystère rapporte des **écus** : de 15 à 35 selon sa difficulté, avec 20 % de moins par erreur.
-  Les écus servent à acheter des indices. Dans la boutique, ils permettent aussi d'équiper l'inspecteur Bramble
-  (deerstalker, trench-coat, loupe…), de décorer sa maison et sa rue (cabine téléphonique rouge, réverbère victorien…)
-  et d'acheter des véhicules (vélo, taxi londonien ancien, montgolfière).
+  Les écus servent à acheter des indices. Dans la boutique, ils permettent aussi d'habiller l'inspecteur Bramble
+  à l'anglaise (flat cap, casque de bobby, bonnet à poil de garde royal, haut-de-forme, manteau Chesterfield…),
+  de meubler son appartement de Baker Street, montré en coupe (cheminée, fauteuil Chesterfield, service à thé, corgi…),
+  d'acheter le **1er étage** (150 écus), qui débloque ses propres objets (violon, tableau d'enquête, lit à baldaquin…),
+  de décorer sa rue de Londres (boîte aux lettres rouge, kiosque à journaux, stand de fish & chips, vue sur Big Ben…)
+  et d'acheter des véhicules (fiacre, black cab, bus rouge à impériale).
   Les prix permettent de **tout acheter** à la fin de l'histoire en prenant un indice toutes les 5 questions :
   gains maximum 2 285 + 5 écus de départ − 19 indices × 3 = 2 233 écus, pour une boutique complète à 2 130 écus.
 - **⭐ 10 mystères bonus** (« Les archives de Scotland Yard », niveau expert) se débloquent une fois les 96 mystères
@@ -91,7 +94,7 @@ Certaines énigmes mélangent plusieurs notions ; elles sont classées selon la 
 | `index.html` | Page et styles |
 | `js/puzzles.js` | Les 96 énigmes de l'histoire (avec leur chapitre `ch`), les 10 bonus (format décrit en tête de fichier), la classe de chaque chapitre (`GRADE_OF_CHAPTER`) et l'ordre de jeu `CHAPTER_PLAN` |
 | `tools/arrange.js` | Vérifie les règles de répartition et génère `CHAPTER_PLAN` (difficulté croissante, types alternés) |
-| `js/shop.js` | Objets de la boutique et dessins SVG de l'inspecteur, de sa maison et de sa rue |
+| `js/shop.js` | Objets de la boutique (dont le verrou du 1er étage, `itemLocked`) et dessins SVG de l'inspecteur, de son appartement en coupe et de sa rue |
 | `js/game.js` | Moteur : progression, écus, indices, boutique, sauvegarde |
 | `test/check.js` | Vérification des énigmes, de la progression, du moteur et du format de sauvegarde |
 | `test/e2e.js` | Test navigateur : écran titre, partie, saisie clavier, boutique, sauvegarde/chargement, bonus |
