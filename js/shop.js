@@ -115,10 +115,10 @@ function drawGround(owned){
     <rect x="320" y="198" width="4" height="10" fill="#c99a2e"/><rect x="319" y="206" width="6" height="2" fill="#c99a2e"/><rect x="321" y="192" width="2" height="6" fill="#fff"/><path d="M322 186 q-2 3 0 5 q2 -2 0 -5z" fill="#ffb020"/>`;
   if (h("service")) s += `<rect x="340" y="236" width="48" height="5" fill="#6b3f1d"/><rect x="344" y="241" width="3" height="21" fill="#6b3f1d"/><rect x="381" y="241" width="3" height="21" fill="#6b3f1d"/>
     <path d="M344 236 q-1 -12 8 -17 h12 q9 5 8 17z" fill="#b87333" stroke="#7a4a1e" stroke-width="1"/><path d="M349 228 q0 5 2 8" fill="none" stroke="#e8b27a" stroke-width="1.6"/>
-    <path d="M344 232 q-8 -2 -12 -12 l3 -1 q3 8 10 9z" fill="#b87333" stroke="#7a4a1e" stroke-width="1"/>
+    <path d="M344.5 231 q-5 -1 -8 -7 l2.4 -1 q2 4.5 5.6 4.6z" fill="#b87333" stroke="#7a4a1e" stroke-width="1"/>
     <rect x="352" y="216" width="12" height="3" rx="1.5" fill="#8a5a2b"/><circle cx="358" cy="214" r="2.2" fill="#3b2412"/>
     <path d="M349 218 q9 -15 18 0" fill="none" stroke="#3b2412" stroke-width="2.4"/><path d="M345 229 h26" stroke="#7a4a1e" stroke-width="1"/>
-    <path d="M332 214 q-3 -4 0 -7 q3 -3 0 -7 M337 213 q-3 -4 0 -7" fill="none" stroke="#cfd6dc" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M336 220 q-3 -4 0 -7 q3 -3 0 -7 M340 219 q-3 -4 0 -7" fill="none" stroke="#cfd6dc" stroke-width="1.4" stroke-linecap="round"/>
     <path d="M374 236 v-8 h10 v8 q-5 4 -10 0z" fill="#f4f1ea" stroke="#2c4a8a"/><path d="M384 230 q4 0 3 3 q-1 2 -3 2" fill="none" stroke="#2c4a8a" stroke-width="1.4"/><path d="M374 231 h10" stroke="#2c4a8a"/>`;
   if (h("fauteuil")) s += `<rect x="18" y="226" width="64" height="34" rx="6" fill="#7a1f26"/><rect x="14" y="236" width="12" height="26" rx="5" fill="#5e161c"/><rect x="74" y="236" width="12" height="26" rx="5" fill="#5e161c"/>
     <rect x="24" y="246" width="52" height="12" rx="3" fill="#8f2830"/>${[30,42,54,66].map(x=>`<circle cx="${x}" cy="236" r="1.5" fill="#3a0c10"/>`).join("")}`;
@@ -244,7 +244,7 @@ function drawInspector(eq){
 
 function drawCorgi(){
   return `<g transform="translate(250 266)">
-    <path d="M1 9 q-9 -2 -8 -12 q2 -4 5 -1 q-1 5 5 7z" fill="#e08a3c"/><path d="M-6 -4 q1 -3 4 -2 l0 3z" fill="#fff"/>
+    <path d="M1.2 9.4 Q-4 6 -5.5 -3.5 Q-1 -1.5 5 7.2z" fill="#e08a3c"/><ellipse cx="-5" cy="-3" rx="1.7" ry="2.2" fill="#fff" transform="rotate(-25 -5 -3)"/>
     <ellipse cx="18" cy="12" rx="18" ry="8" fill="#e08a3c"/><ellipse cx="18" cy="15" rx="12" ry="5" fill="#fff"/>
     <circle cx="36" cy="4" r="8" fill="#e08a3c"/>
     <path d="M30.5 0 L31 -12 L36 -3.5z" fill="#e08a3c"/><path d="M32 -2 L32 -8.5 L34.5 -4z" fill="#f2b8a8"/>
@@ -361,12 +361,26 @@ function drawStreet(owned){
     <rect x="15" y="136" width="64" height="24" fill="#241a10" stroke="#142a1c"/><rect x="15" y="136" width="64" height="3" fill="#5a3a1a"/>
     ${[0,1,2,3,4,5,6].map(k => `<rect x="${17 + k * 9}" y="141" width="8" height="9" fill="${["#c8102e","#2c4a8a","#f2c94c","#2e7d32","#d36ac2","#e2873d","#6a2c8a"][k]}"/><rect x="${18.5 + k * 9}" y="143" width="5" height="1.5" fill="#fff"/><rect x="${18.5 + k * 9}" y="146" width="5" height="1" fill="#ffffffaa"/>`).join("")}
     <rect x="15" y="151" width="64" height="2" fill="#5a3a1a"/>${[0,1,2,3,4,5].map(k => `<rect x="${18 + k * 10}" y="153" width="9" height="7" fill="#f4f1ea" stroke="#999" stroke-width="0.5"/><path d="M${19.5 + k * 10} 155 h6 M${19.5 + k * 10} 157.5 h6" stroke="#444" stroke-width="0.7"/>`).join("")}
-    <circle cx="47" cy="148" r="4.5" fill="${SKIN}"/><path d="M42 146 q5 -7 10 0z" fill="#5a4a32"/><rect x="40" y="152" width="14" height="8" rx="2" fill="#8a3a2a"/>
+    <path d="M38 160 v-5 q0 -6 9 -6 q9 0 9 6 v5z" fill="#8a3a2a"/><path d="M41.5 160 v-7 h11 v7z" fill="#e8dfc8" stroke="#b5ab94" stroke-width="0.5"/><path d="M43 149.8 l1 3.2 M51 149.8 l-1 3.2" stroke="#e8dfc8" stroke-width="1.2"/><rect x="44.5" y="155" width="5" height="3" fill="#cfc4aa"/>
+    <rect x="45" y="147.5" width="4" height="3" fill="${SKIN}"/><path d="M43 150 l4 3.6 l4 -3.6 q-4 -1.8 -8 0z" fill="#c8102e"/>
+    <path d="M38.5 153 q-3.5 3 -2 7" fill="none" stroke="#8a3a2a" stroke-width="3.2" stroke-linecap="round"/><circle cx="36.6" cy="160" r="1.7" fill="${SKIN}"/>
+    <circle cx="47" cy="143.5" r="5" fill="${SKIN}"/><circle cx="42" cy="144.5" r="1.3" fill="#e0ae6a"/><circle cx="52" cy="144.5" r="1.3" fill="#e0ae6a"/><circle cx="44" cy="146" r="1.1" fill="#f0a090" opacity="0.7"/><circle cx="50" cy="146" r="1.1" fill="#f0a090" opacity="0.7"/>
+    <path d="M41.2 141.5 q0 -6.5 5.8 -6.5 q5.8 0 5.8 6.5z" fill="#5a4a32" stroke="#3f331f" stroke-width="0.5"/><path d="M52 141.3 h6 q0.6 1.8 -6 1.8z" fill="#46361f"/><circle cx="47" cy="135.4" r="0.9" fill="#3f331f"/><path d="M42 140.4 h10" stroke="#3f331f" stroke-width="0.6"/>
+    <circle cx="45" cy="143.2" r="0.8" fill="#222"/><circle cx="49" cy="143.2" r="0.8" fill="#222"/><path d="M43.6 141.9 l2.6 -0.5 M48 141.4 l2.6 0.5" stroke="#5a3a1a" stroke-width="0.6"/><path d="M47 143.8 v1.6 h-1" fill="none" stroke="#c48b52" stroke-width="0.6"/>
+    <path d="M44 146.6 q3 -1.6 6 0 q-3 0.8 -6 0z" fill="#5a3a1a"/><ellipse cx="47" cy="148" rx="1.3" ry="0.9" fill="#7a2a2a"/>
+    <path d="M55 153 q5 -1 6.5 -5" fill="none" stroke="#8a3a2a" stroke-width="3.2" stroke-linecap="round"/><circle cx="61.8" cy="147.2" r="1.8" fill="${SKIN}"/>
+    <path d="M58.5 138.5 l9.5 -1.2 l1.2 10 l-9.5 1.2z" fill="#f4f1ea" stroke="#999" stroke-width="0.5"/><path d="M60 141 l6.5 -0.8 M60.3 143.3 l6.5 -0.8 M60.6 145.6 l4 -0.5" stroke="#444" stroke-width="0.6"/><rect x="60" y="139.3" width="6.4" height="1.6" fill="#c8102e" transform="rotate(-7 60 139.3)"/>
     <rect x="12" y="159" width="70" height="4" fill="#c9a26a" stroke="#8a6a3a" stroke-width="0.6"/><rect x="62" y="154" width="16" height="5" fill="#f4f1ea" stroke="#999" stroke-width="0.5"/><rect x="62" y="150" width="16" height="4" fill="#e8e0c8" stroke="#999" stroke-width="0.5"/>
     <rect x="12" y="163" width="14" height="10" fill="#f4f1ea" stroke="#1f3f2a"/><text x="19" y="169" font-size="3.2" fill="#c8102e" text-anchor="middle" font-family="sans-serif" font-weight="bold">DAILY</text><text x="19" y="172" font-size="3.2" fill="#222" text-anchor="middle" font-family="sans-serif">NEWS</text>
     <rect x="30" y="165" width="50" height="8" fill="#244a30" stroke="#1f3f2a" stroke-width="0.6"/>${[0,1,2,3].map(k => `<rect x="${32 + k * 12}" y="166.5" width="9" height="5" fill="#2e5a3a" stroke="#1f3f2a" stroke-width="0.5"/>`).join("")}
     <path d="M10 175 h74" stroke="#142a1c" stroke-width="2"/>`;
-  if (h("boite")) s += `<rect x="91" y="142" width="14" height="33" rx="2" fill="#c8102e" stroke="#8a0a1e"/><path d="M89 144 q9 -12 18 0z" fill="#c8102e" stroke="#8a0a1e"/><rect x="93" y="150" width="10" height="2" fill="#1c1c1c"/><rect x="92" y="156" width="12" height="6" fill="#a00d24"/><text x="98" y="160.6" font-size="3.4" fill="#f2c94c" text-anchor="middle" font-family="serif">ER</text><rect x="89" y="172" width="18" height="4" fill="#1c1c1c"/>`;
+  if (h("boite")) s += `<g transform="translate(94 148)"><ellipse cx="6" cy="27.5" rx="9" ry="1.8" fill="#00000033"/>
+    <rect x="-0.5" y="24" width="13" height="3" fill="#1c1c1c"/><rect x="0.5" y="22.5" width="11" height="1.8" fill="#2a2a2a"/>
+    <rect x="0" y="5" width="12" height="18" rx="1" fill="#c8102e" stroke="#8a0a1e" stroke-width="0.8"/><rect x="9" y="5.5" width="2.8" height="17" fill="#8a0a1e" opacity="0.35"/><rect x="1" y="6" width="1.2" height="16" fill="#ffffff" opacity="0.3"/>
+    <rect x="-1" y="3.8" width="14" height="2.2" rx="0.8" fill="#a00d24" stroke="#8a0a1e" stroke-width="0.5"/><path d="M0 3.8 q6 -7 12 0z" fill="#c8102e" stroke="#8a0a1e" stroke-width="0.6"/><circle cx="6" cy="-2" r="1.2" fill="#a00d24"/><rect x="5.3" y="-1" width="1.4" height="2.4" fill="#a00d24"/>
+    <rect x="1.5" y="7.6" width="9" height="3.2" rx="0.6" fill="#1c1c1c" stroke="#f2c94c" stroke-width="0.5"/><rect x="2.4" y="8.5" width="7.2" height="1.2" fill="#000"/>
+    <rect x="2.4" y="12.3" width="7.2" height="4.4" fill="#f4f1ea" stroke="#8a8a84" stroke-width="0.4"/><path d="M3.4 13.7 h5.2 M3.4 15.1 h3.6" stroke="#444" stroke-width="0.4"/>
+    <path d="M4.2 21 l0.6 -1.6 l0.9 1 l0.9 -1.4 l0.9 1.4 l0.9 -1 l0.6 1.6z" fill="#f2c94c"/><text x="6" y="22.6" font-size="2.2" fill="#f2c94c" text-anchor="middle" font-family="serif">ER</text></g>`;
   if (h("fishchips")) s += `<rect x="318" y="140" width="4" height="36" fill="#3b2412"/><rect x="386" y="140" width="4" height="36" fill="#3b2412"/>
     <rect x="322" y="142" width="64" height="18" fill="#f4f1ea"/><rect x="324" y="146" width="60" height="2" fill="#7a4a22"/>
     ${[0,1,2].map(k=>`<ellipse cx="${332+k*9}" cy="145" rx="4" ry="1.8" fill="#d9a441" stroke="#a8742a" stroke-width="0.5"/>`).join("")}<rect x="362" y="138" width="3" height="8" rx="1" fill="#7a3a1a"/><rect x="368" y="139" width="3" height="7" rx="1" fill="#3a5a8a"/>
@@ -388,7 +402,10 @@ function drawStreet(owned){
   // Véhicules sur la chaussée (tous tournés vers la droite), au-dessous du trottoir : rien ne cache les boutiques
   if (h("fiacre")) s += `<g transform="translate(6 195) scale(0.9)">
     <path d="M62 26 C50 26 44 34 38 34" fill="none" stroke="#3b2412" stroke-width="2"/><line x1="40" y1="33" x2="84" y2="33" stroke="#3b2412" stroke-width="2.5"/>
-    <path d="M8 8 h12 v6 h-12z" fill="#3b2412"/><circle cx="14" cy="2" r="3.2" fill="${SKIN}"/><rect x="10.5" y="-4" width="7" height="5" fill="#111"/><rect x="11" y="5" width="6" height="4" fill="#5a3a1a"/>
+    <path d="M9 14 l-3 -3 M8 15 L14 25" stroke="#3b2412" stroke-width="1.6"/><rect x="5" y="12.5" width="18" height="3.5" fill="#5a3a1a"/><rect x="4" y="3" width="2.4" height="10" fill="#5a3a1a"/>
+    <rect x="9" y="4" width="8.5" height="9" rx="2" fill="#2a2a3a"/><rect x="12" y="10" width="11" height="3.6" rx="1.8" fill="#2a2a3a"/><rect x="21" y="11" width="3.6" height="5.5" fill="#1c1c1c"/>
+    <circle cx="13.2" cy="0.5" r="3.2" fill="${SKIN}"/><rect x="8.5" y="-1.6" width="9.5" height="1.6" fill="#111"/><rect x="10" y="-8" width="6.5" height="6.5" fill="#111"/><rect x="10" y="-3.2" width="6.5" height="1.2" fill="#a8323a"/>
+    <path d="M17 6.5 Q22 7 25 4" fill="none" stroke="#2a2a3a" stroke-width="2.6" stroke-linecap="round"/><path d="M25 4 Q48 14 70 23" fill="none" stroke="#2a1a0c" stroke-width="0.8"/><path d="M24 3 l-2 -9" stroke="#3b2412" stroke-width="0.9"/>
     <path d="M12 16 h38 v22 h-42z" fill="#1c1c1c"/><path d="M9 17 q22 -16 44 0z" fill="#1c1c1c"/><rect x="31" y="21" width="15" height="10" fill="#9fb3c3"/><line x1="26" y1="18" x2="26" y2="38" stroke="#4a4a4a"/>
     <circle cx="30" cy="40" r="12" fill="none" stroke="#3b2412" stroke-width="3"/>${[0,45,90,135].map(a=>`<line x1="${(30-11*Math.cos(a*Math.PI/180)).toFixed(1)}" y1="${(40-11*Math.sin(a*Math.PI/180)).toFixed(1)}" x2="${(30+11*Math.cos(a*Math.PI/180)).toFixed(1)}" y2="${(40+11*Math.sin(a*Math.PI/180)).toFixed(1)}" stroke="#3b2412"/>`).join("")}<circle cx="30" cy="40" r="2" fill="#c99a2e"/>
     <path d="M70 22 q-12 4 -8 22" fill="none" stroke="#2a1a0c" stroke-width="3.5" stroke-linecap="round"/>
