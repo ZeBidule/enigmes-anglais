@@ -41,7 +41,7 @@ un appartement en coupe sur deux étages (le 1er étage s'achète), et des tenue
 | Rez-de-chaussée | Drapeau Union Jack sur pied 10, Tapis persan 15, Service à thé 20, Portrait royal 30, Fauteuil Chesterfield 40, Cheminée 55, Gramophone 65, Corgi 110 | 345 |
 | Appartement | 1er étage 150 | 150 |
 | 1er étage | Violon 35, Tableau d'enquête 40, Machine à écrire 45, Buste de Shakespeare 50, Lit à baldaquin 70 | 240 |
-| Rue | Boîte aux lettres rouge 25, Jardinières aux fenêtres 25, Plaque bleue 30, Kiosque à journaux 60, Stand de fish & chips 90, Big Ben au loin 120 | 350 |
+| Rue | Boîte aux lettres rouge 25, Cabine téléphonique rouge 60, Jardinières aux fenêtres 25, Plaque bleue 30, Kiosque à journaux 60, Stand de fish & chips 60, Big Ben au loin 90 | 350 |
 | Véhicules | Fiacre (hansom cab) 50, Taxi d'époque 120, Bus à impériale 160, Dirigeable 200 | 530 |
 
 Façade toujours présente : maison mitoyenne en briques, porte noire avec numéro, trottoir, ciel gris de Londres.
