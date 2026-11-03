@@ -300,23 +300,36 @@ function drawStreet(owned){
     <line x1="${x + w / 2}" y1="${y}" x2="${x + w / 2}" y2="${y + h}" stroke="#fff" stroke-width="1.5"/><line x1="${x}" y1="${y + h * 0.4}" x2="${x + w}" y2="${y + h * 0.4}" stroke="#fff" stroke-width="1.5"/>
     ${o.cur ? `<path d="M${x} ${y} h${w * 0.3} q-3 ${h * 0.5} 0 ${h} h-${w * 0.3}z" fill="${o.cur}"/><path d="M${x + w} ${y} h-${w * 0.3} q3 ${h * 0.5} 0 ${h} h${w * 0.3}z" fill="${o.cur}"/>` : ""}
     <rect x="${x - 2}" y="${y + h}" width="${w + 4}" height="3" fill="#e8dfc8" stroke="#a89878" stroke-width="0.6"/>`;
+  const bigwin = (x, y, w, h) => `<rect x="${x - 4}" y="${y - 5}" width="${w + 8}" height="${h + 9}" fill="#efe9dc" stroke="#bfb497" stroke-width="1"/>
+    <rect x="${x + w / 2 - 4}" y="${y - 10}" width="8" height="6" fill="#e8dfc8" stroke="#a89878" stroke-width="0.7"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#3e4c5a" stroke="#fff" stroke-width="2.5"/>
+    <path d="M${x + 3} ${y + 3} l${w * 0.3} 0 l-${w * 0.2} ${h * 0.5}z" fill="#ffffff22"/>
+    <line x1="${x + w / 2}" y1="${y}" x2="${x + w / 2}" y2="${y + h}" stroke="#fff" stroke-width="2"/>${[1, 2].map(k => `<line x1="${x}" y1="${y + h * k / 3}" x2="${x + w}" y2="${y + h * k / 3}" stroke="#fff" stroke-width="1.6"/>`).join("")}
+    <path d="M${x} ${y} h${w * 0.22} q-4 ${h * 0.35} -1 ${h * 0.6} q2 3 -1 ${h * 0.4 - 0} h-${w * 0.22 - 1}z" fill="#8a2c36" opacity="0.9"/><path d="M${x + w} ${y} h-${w * 0.22} q4 ${h * 0.35} 1 ${h * 0.6} q-2 3 1 ${h * 0.4} h${w * 0.22 - 1}z" fill="#8a2c36" opacity="0.9"/>
+    <rect x="${x - 6}" y="${y + h}" width="${w + 12}" height="4" fill="#e8dfc8" stroke="#a89878" stroke-width="0.7"/><rect x="${x + 2}" y="${y + h + 4}" width="4" height="3" fill="#d8cfbc"/><rect x="${x + w - 6}" y="${y + h + 4}" width="4" height="3" fill="#d8cfbc"/>`;
+  const door = (x, y, w, h, c) => `<rect x="${x - 3}" y="${y - 5}" width="${w + 6}" height="${h + 5}" fill="#e8dfc8" stroke="#a89878" stroke-width="0.6"/>
+    <path d="M${x} ${y} q${w / 2} -9 ${w} 0z" fill="#9fb3c3" stroke="#e8dfc8"/><path d="M${x + w / 2} ${y - 4.5} v4.5 M${x + 3} ${y - 2} l${w / 2 - 3} 2 M${x + w - 3} ${y - 2} l-${w / 2 - 3} 2" stroke="#fff" stroke-width="0.6"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}" stroke="#00000055"/>
+    <rect x="${x + 3}" y="${y + 4}" width="${w / 2 - 4.5}" height="${h * 0.38}" fill="#ffffff22" stroke="#00000044"/><rect x="${x + w / 2 + 1.5}" y="${y + 4}" width="${w / 2 - 4.5}" height="${h * 0.38}" fill="#ffffff22" stroke="#00000044"/>
+    <rect x="${x + 3}" y="${y + h * 0.5}" width="${w / 2 - 4.5}" height="${h * 0.42}" fill="#00000022" stroke="#00000044"/><rect x="${x + w / 2 + 1.5}" y="${y + h * 0.5}" width="${w / 2 - 4.5}" height="${h * 0.42}" fill="#00000022" stroke="#00000044"/>
+    <circle cx="${x + w - 3.5}" cy="${y + h * 0.48}" r="1.4" fill="#c99a2e"/><rect x="${x - 4}" y="${y + h - 2}" width="${w + 8}" height="3" fill="#b8ad98" stroke="#8a806a" stroke-width="0.5"/>`;
   const chimney = (x, y, n) => `<rect x="${x}" y="${y}" width="12" height="${n}" fill="url(#brick)" stroke="#7a3624" stroke-width="0.6"/><rect x="${x - 1}" y="${y - 2}" width="14" height="3" fill="#e8dfc8"/><rect x="${x + 2}" y="${y - 8}" width="3.5" height="6" fill="#b5651d"/><rect x="${x + 7}" y="${y - 8}" width="3.5" height="6" fill="#b5651d"/>`;
   s += `<rect x="0" y="50" width="105" height="125" fill="#c9b79a"/>${[58,68,78,88,98,108,118,128,138,148,158,168].map(y => `<line x1="0" y1="${y}" x2="105" y2="${y}" stroke="#b8a584" stroke-width="0.8"/>`).join("")}
     ${chimney(14, 24, 20)}${chimney(72, 28, 16)}<path d="M-2 52 L2 36 H103 L107 52z" fill="#4a4f5a"/>${[0,1,2,3,4,5,6,7,8,9,10].map(k => `<path d="M${k * 10} 37 v14" stroke="#383c46" stroke-width="0.8"/>`).join("")}
     <rect x="-2" y="50" width="109" height="6" fill="#e8dfc8" stroke="#a89878" stroke-width="0.6"/>${[...Array(18)].map((_, k) => `<rect x="${k * 6 - 1}" y="56" width="3" height="2.5" fill="#d3c8a8"/>`).join("")}
     ${win(10, 66, 22, 28, { cur: "#a8323a", lit: true })}${win(42, 66, 22, 28, { shut: true })}${win(76, 66, 22, 28, { cur: "#d9c8a0" })}
-    ${win(10, 100, 22, 20, { shut: true })}${win(42, 100, 22, 20, { cur: "#2c4a8a" })}${win(76, 100, 22, 20, { lit: true, cur: "#a8323a" })}
+    ${win(12, 138, 24, 24, { shut: true, cur: "#a8323a" })}${door(60, 132, 24, 43, "#2e5a3a")}
     <rect x="102" y="52" width="3" height="123" fill="#5a5a5a"/>
     <rect x="275" y="70" width="125" height="105" fill="#d8cdb0"/>${[78,88,98,108,118,128,138,148,158,168].map(y => `<line x1="275" y1="${y}" x2="400" y2="${y}" stroke="#c4b896" stroke-width="0.8"/>`).join("")}
     ${chimney(286, 50, 20)}${chimney(310, 56, 14)}<rect x="273" y="68" width="127" height="7" fill="#e8dfc8" stroke="#a89878" stroke-width="0.6"/>${[...Array(21)].map((_, k) => `<rect x="${275 + k * 6}" y="75" width="3" height="2.5" fill="#cbbf9c"/>`).join("")}
     <rect x="275" y="76" width="5" height="99" fill="#cfc3a0"/><rect x="395" y="76" width="5" height="99" fill="#cfc3a0"/>
     ${win(288, 86, 20, 28, { cur: "#6a2c8a", lit: true })}${win(322, 86, 20, 28, { shut: true })}${win(356, 86, 20, 28, { cur: "#a8323a" })}
+    ${win(290, 140, 22, 24, { cur: "#6a2c8a", lit: true })}${door(346, 130, 26, 45, "#1f3f6a")}
     <rect x="318" y="118" width="28" height="3" fill="#2a2a2a"/>${[0,1,2,3,4,5].map(k => `<line x1="${320 + k * 5}" y1="109" x2="${320 + k * 5}" y2="118" stroke="#2a2a2a" stroke-width="1"/>`).join("")}<path d="M318 109 h28" stroke="#2a2a2a" stroke-width="1"/>
     <rect x="272" y="76" width="3" height="99" fill="#5a5a5a"/>
     <rect x="105" y="30" width="170" height="145" fill="url(#brick)"/>
     <rect x="105" y="105" width="170" height="70" fill="#efe9dc"/><rect x="100" y="24" width="180" height="8" fill="#efe9dc"/><rect x="100" y="102" width="180" height="5" fill="#d8cfbc"/>
-    ${[125,215].map(x=>`<rect x="${x}" y="45" width="40" height="46" fill="#3e4c5a" stroke="#fff" stroke-width="3"/><line x1="${x+20}" y1="45" x2="${x+20}" y2="91" stroke="#fff" stroke-width="2"/>`).join("")}
-    <rect x="120" y="118" width="40" height="40" fill="#3e4c5a" stroke="#fff" stroke-width="3"/>
+    ${bigwin(125, 45, 40, 46)}${bigwin(215, 45, 40, 46)}${bigwin(120, 118, 40, 38)}
     <rect x="172" y="112" width="36" height="58" fill="#111"/><path d="M172 112 q18 -14 36 0z" fill="#9fb3c3" stroke="#efe9dc" stroke-width="2"/>
     <circle cx="200" cy="142" r="2" fill="#c99a2e"/><text x="190" y="132" font-size="8" fill="#c99a2e" text-anchor="middle" font-family="serif">221B</text>
     <rect x="166" y="170" width="48" height="5" fill="#cfcfcf"/>
@@ -324,11 +337,11 @@ function drawStreet(owned){
     <rect y="175" width="400" height="12" fill="#a9a9a3"/><rect y="187" width="400" height="63" fill="#4a4a4e"/>
     ${[20,90,160,230,300,370].map(x=>`<rect x="${x}" y="244" width="30" height="3" fill="#e8e8e8"/>`).join("")}`;
   if (h("plaque")) s += `<circle cx="246" cy="128" r="20" fill="#f4f1ea" stroke="#9a9a92" stroke-width="1"/><circle cx="246" cy="128" r="18" fill="#1f5aa8"/><circle cx="246" cy="128" r="16.2" fill="none" stroke="#fff" stroke-width="0.8"/>
-    <text x="246" y="120" font-size="4.4" fill="#fff" text-anchor="middle" font-family="serif" letter-spacing="0.3">INSPECTOR</text>
-    <text x="246" y="128" font-size="7.2" fill="#fff" text-anchor="middle" font-family="serif" font-weight="bold">BRAMBLE</text>
-    <path d="M232 131 h28" stroke="#fff" stroke-width="0.6"/>
-    <text x="246" y="136.5" font-size="4" fill="#fff" text-anchor="middle" font-family="serif" font-style="italic">lived here</text>
-    <text x="246" y="143" font-size="4.6" fill="#fff" text-anchor="middle" font-family="serif" font-weight="bold">221B</text>
+    <text x="246" y="121" font-size="3.5" fill="#fff" text-anchor="middle" font-family="serif" letter-spacing="0.3">INSPECTOR</text>
+    <text x="246" y="129" font-size="5.8" fill="#fff" text-anchor="middle" font-family="serif" font-weight="bold">BRAMBLE</text>
+    <path d="M236 131.5 h20" stroke="#fff" stroke-width="0.6"/>
+    <text x="246" y="136.5" font-size="3.4" fill="#fff" text-anchor="middle" font-family="serif" font-style="italic">lived here</text>
+    <text x="246" y="142.5" font-size="4" fill="#fff" text-anchor="middle" font-family="serif" font-weight="bold">221B</text>
     ${[[228.5,128],[263.5,128]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.1" fill="#777"/>`).join("")}`;
   if (h("jardinieres")) s += [125,215].map(x => {
     const petals = (cx, cy, c) => [0,72,144,216,288].map(a => `<circle cx="${(cx + 1.8 * Math.cos(a * Math.PI / 180)).toFixed(1)}" cy="${(cy + 1.8 * Math.sin(a * Math.PI / 180)).toFixed(1)}" r="1.6" fill="${c}"/>`).join("") + `<circle cx="${cx}" cy="${cy}" r="1" fill="#f2c94c"/>`;
@@ -336,9 +349,7 @@ function drawStreet(owned){
     return `<rect x="${x - 3}" y="91" width="46" height="9" fill="#6b3f1d" stroke="#3b2412"/>${[0,1,2,3,4,5].map(k => `<line x1="${x + k * 8}" y1="92" x2="${x + k * 8}" y2="99" stroke="#3b2412" stroke-width="0.7"/>`).join("")}
       <rect x="${x - 4}" y="94" width="48" height="2" fill="#c99a2e"/>
       ${[...Array(12)].map((_, k) => `<ellipse cx="${x + 1 + k * 3.6}" cy="${88 + (k % 3)}" rx="3.2" ry="4" fill="${["#2e7d32", "#3e8e3a", "#4caf50"][k % 3]}" transform="rotate(${(k % 2 ? 25 : -25)} ${x + 1 + k * 3.6} 89)"/>`).join("")}
-      ${[0,1,2,3,4,5,6,7].map(k => petals(x + 3 + k * 5.2, 84 + (k % 3) * 2.5, cols[k % 5])).join("")}
-      <path d="M${x + 2} 100 q-3 6 0 12 M${x + 12} 100 q-2 5 1 9 M${x + 30} 100 q3 5 0 11 M${x + 40} 100 q2 4 -1 8" fill="none" stroke="#2e7d32" stroke-width="1.6" stroke-linecap="round"/>
-      <circle cx="${x + 2}" cy="112" r="1.6" fill="#d8223a"/><circle cx="${x + 39}" cy="108" r="1.6" fill="#f4a6c0"/>`;
+      ${[0,1,2,3,4,5,6,7].map(k => petals(x + 3 + k * 5.2, 84 + (k % 3) * 2.5, cols[k % 5])).join("")}`;
   }).join("");
   if (h("kiosque")) s += `<rect x="10" y="132" width="74" height="43" fill="#2e5a3a" stroke="#1f3f2a" stroke-width="1.5"/>
     <path d="M3 132 l11 -16 h66 l11 16z" fill="#1f3f2a" stroke="#142a1c"/><rect x="3" y="131" width="88" height="3" fill="#c99a2e"/><line x1="47" y1="116" x2="47" y2="108" stroke="#c99a2e" stroke-width="2"/><circle cx="47" cy="106" r="2.5" fill="#c99a2e"/>
@@ -362,8 +373,7 @@ function drawStreet(owned){
     <path d="M312 142 h88 l-4 -11 h-80z" fill="#fff"/>${[0,1,2,3,4,5,6,7].map(k=>`<path d="M${312+k*11} 142 h5.5 l-1.5 -11 h-3z" fill="#1f5aa8"/>`).join("")}
     ${[0,1,2,3,4,5,6,7].map(k=>`<circle cx="${315.5+k*11}" cy="142.5" r="2.8" fill="${k%2?"#fff":"#1f5aa8"}"/>`).join("")}
     <rect x="320" y="120" width="68" height="11" rx="2" fill="#1f3f6a" stroke="#f2c94c" stroke-width="1.2"/><text x="354" y="128.5" font-size="7.2" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">FISH &amp; CHIPS</text>
-    <rect x="337" y="116" width="2" height="5" fill="#3b2412"/><rect x="369" y="116" width="2" height="5" fill="#3b2412"/>
-    <circle cx="329" cy="181" r="4" fill="#222" stroke="#999"/><circle cx="381" cy="181" r="4" fill="#222" stroke="#999"/>`;
+    <rect x="337" y="116" width="2" height="5" fill="#3b2412"/><rect x="369" y="116" width="2" height="5" fill="#3b2412"/>`;
   if (h("cabine")) s += `<g transform="translate(278 118)"><ellipse cx="15" cy="66" rx="19" ry="2.5" fill="#00000033"/>
     <path d="M-1 9 q16 -13 32 0z" fill="#c8102e" stroke="#8a0a1e" stroke-width="1.2"/><rect x="-1" y="9" width="32" height="2.5" fill="#a00d24"/>
     <path d="M10 4 l2 -4 l3 3 l3 -3 l2 4z" fill="#f2c94c" stroke="#8a6a1e" stroke-width="0.6"/><circle cx="15" cy="-1" r="1.2" fill="#f2c94c"/>
@@ -409,13 +419,12 @@ function drawStreet(owned){
       <path d="M72 40 A16 16 0 0 1 104 40" fill="none" stroke="#1c1c1c" stroke-width="3.2"/>
     </g>`;
   }
-  if (h("bus")) s += `<g transform="translate(266 197) scale(0.82)">
-    <rect x="2" y="45" width="14" height="4" fill="#4a4a4a"/><line x1="6" y1="22" x2="6" y2="46" stroke="#c0c0c0" stroke-width="1.8"/>
+  if (h("bus")) s += `<g transform="translate(262 188) scale(1)">
     <path d="M14 2 H100 Q113 2 115 14 V46 H14z" fill="#c8102e" stroke="#8a0a1e" stroke-width="1.5"/>
     <rect x="14" y="22" width="101" height="4" fill="#f4f1ea"/>
     ${[0,1,2,3,4].map(k => `<rect x="${20 + k * 15}" y="7" width="12" height="12" fill="#cfe3ee" stroke="#8a0a1e"/>`).join("")}
     ${[0,1,2,3,4].map(k => `<rect x="${20 + k * 16}" y="29" width="13" height="12" fill="#cfe3ee" stroke="#8a0a1e"/>`).join("")}
-    <path d="M97 6 h8 q6 0 7 8 v6 h-15z" fill="#cfe3ee" stroke="#8a0a1e"/><rect x="98" y="7.5" width="12" height="4.5" fill="#1c1c1c"/><text x="104" y="11.3" font-size="3.6" fill="#f2c94c" text-anchor="middle" font-family="sans-serif" font-weight="bold">LONDON</text>
+    <path d="M97 6 h8 q6 0 7 8 v6 h-15z" fill="#cfe3ee" stroke="#8a0a1e"/><rect x="98" y="23" width="14" height="5" fill="#1c1c1c"/><text x="105" y="26.8" font-size="3.6" fill="#f2c94c" text-anchor="middle" font-family="sans-serif" font-weight="bold">LONDON</text>
     <rect x="99" y="28" width="11" height="14" rx="1" fill="#cfe3ee" stroke="#8a0a1e"/><circle cx="104.5" cy="34" r="3" fill="${SKIN}"/><path d="M100.5 42 q4 -6 8 0z" fill="#2c3e6a"/>
     <rect x="111" y="28" width="4" height="12" fill="#c99a2e"/>${[31,34,37].map(y => `<line x1="111" y1="${y}" x2="115" y2="${y}" stroke="#8a6a1e" stroke-width="0.8"/>`).join("")}
     <circle cx="114" cy="43" r="3" fill="#fff6c0" stroke="#8a6a1e"/><rect x="112" y="45" width="7" height="4" rx="1" fill="#555"/>
