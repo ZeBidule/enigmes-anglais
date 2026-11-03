@@ -32,7 +32,7 @@ C'est pour cette raison qu'un lien « Code source » apparaît en bas du jeu : i
   de meubler son appartement de Baker Street, montré en coupe (cheminée, fauteuil Chesterfield, service à thé, corgi…),
   d'acheter le **1er étage** (150 écus), qui débloque ses propres objets (violon, tableau d'enquête, lit à baldaquin…),
   de décorer sa rue de Londres (boîte aux lettres rouge, kiosque à journaux, stand de fish & chips, vue sur Big Ben…)
-  et d'acheter des véhicules (fiacre, black cab, bus rouge à impériale).
+  et d'acheter des véhicules (fiacre, taxi d'époque des années 1920, bus rouge à impériale, dirigeable).
   Les prix permettent de **tout acheter** à la fin de l'histoire en prenant un indice toutes les 5 questions :
   gains maximum 2 285 + 5 écus de départ − 19 indices × 3 = 2 233 écus, pour une boutique complète à 2 130 écus.
 - **⭐ 10 mystères bonus** (« Les archives de Scotland Yard », niveau expert) se débloquent une fois les 96 mystères

@@ -46,7 +46,7 @@ const ITEMS = [
   { id:"the",       slot:"hand", name:"Tasse de thé",                      price:20 },
   { id:"parapluie", slot:"hand", name:"Parapluie noir",                    price:45 },
   // Rez-de-chaussée
-  { id:"coussin",   slot:"home", name:"Coussin Union Jack",                price:10 },
+  { id:"drapeau",   slot:"home", name:"Drapeau Union Jack sur pied",       price:10 },
   { id:"persan",    slot:"home", name:"Tapis persan",                      price:15 },
   { id:"service",   slot:"home", name:"Service à thé",                     price:20 },
   { id:"portrait",  slot:"home", name:"Portrait royal",                    price:30 },
@@ -70,9 +70,10 @@ const ITEMS = [
   { id:"fishchips", slot:"street", name:"Stand de fish & chips",           price:90 },
   { id:"bigben",    slot:"street", name:"Vue sur Big Ben",                 price:120 },
   // Véhicules
-  { id:"fiacre",    slot:"vehicle", name:"Fiacre (hansom cab)",            price:70 },
-  { id:"blackcab",  slot:"vehicle", name:"Black cab",                      price:180 },
-  { id:"bus",       slot:"vehicle", name:"Bus rouge à impériale",          price:280 }
+  { id:"fiacre",    slot:"vehicle", name:"Fiacre (hansom cab)",            price:50 },
+  { id:"taxi",      slot:"vehicle", name:"Taxi londonien d'époque",        price:120 },
+  { id:"bus",       slot:"vehicle", name:"Bus rouge à impériale",          price:160 },
+  { id:"dirigeable", slot:"vehicle", name:"Dirigeable",                    price:200 }
 ];
 const DECOR_SLOTS = ["home", "floor", "upstairs", "street", "vehicle"];
 const SLOT_NAMES = { hat:"Chapeaux", coat:"Vestes", neck:"Cou", face:"Visage", hand:"Accessoires",
@@ -95,8 +96,14 @@ function drawGround(owned){
     ${[0,1,2,3,4,5,6,7].map(i=>`<line x1="${i*55}" y1="262" x2="${i*55-20}" y2="300" stroke="#6b4420"/>`).join("")}
     <rect x="22" y="168" width="48" height="52" fill="#b9c7cf" stroke="#3b2412" stroke-width="4"/>
     <line x1="46" y1="168" x2="46" y2="220" stroke="#3b2412" stroke-width="2"/><line x1="22" y1="194" x2="70" y2="194" stroke="#3b2412" stroke-width="2"/>`;
-  if (h("portrait")) s += `<rect x="272" y="160" width="36" height="44" fill="#c99a2e"/><rect x="277" y="165" width="26" height="34" fill="#2c3e6a"/>
-    <circle cx="290" cy="178" r="7" fill="${SKIN}"/><path d="M283 172 l2 -6 l3 4 l2 -5 l2 5 l3 -4 l2 6z" fill="#f2c94c"/><path d="M280 199 q10 -14 20 0z" fill="#6a2c8a"/>`;
+  if (h("portrait")) s += `<ellipse cx="290" cy="182" rx="20" ry="25" fill="#c99a2e"/><ellipse cx="290" cy="182" rx="16.5" ry="21.5" fill="#2c3e6a"/>
+    <path d="M275 202 q2 -13 15 -13 q13 0 15 13 q-15 4 -30 0z" fill="#a8323a"/>
+    <path d="M278 194 q12 9 24 0 l1.5 4 q-13.5 8 -27 0z" fill="#f4f1ea"/>${[281,287,293,299].map(x=>`<circle cx="${x}" cy="196.5" r="0.9" fill="#222"/>`).join("")}
+    <circle cx="290" cy="181" r="8" fill="${SKIN}"/>
+    <path d="M281.5 181 q-1.5 -11 8.5 -11 q10 0 8.5 11 q-2 -6 -8.5 -6 q-6.5 0 -8.5 6z" fill="#cfcfcf"/>
+    <path d="M282 171 l1 -8 l3.5 3.5 l3.5 -6 l3.5 6 l3.5 -3.5 l1 8z" fill="#f2c94c" stroke="#8a6a1e" stroke-width="0.6"/>
+    <circle cx="290" cy="167.5" r="1.2" fill="#c8102e"/>
+    <circle cx="287" cy="181.5" r="0.9" fill="#222"/><circle cx="293" cy="181.5" r="0.9" fill="#222"/><path d="M287.5 186 q2.5 1.8 5 0" fill="none" stroke="#8a4a3a" stroke-width="0.8"/>`;
   if (h("cheminee")) s += `<rect x="252" y="210" width="76" height="8" fill="#e8e0d0"/><rect x="258" y="218" width="64" height="38" fill="#cfc4b0"/>
     <rect x="272" y="226" width="36" height="30" fill="#1c1c1c"/><path d="M280 256 q4 -18 10 -6 q4 -14 10 6z" fill="#f28c28"/><path d="M285 256 q4 -10 5 -2 q3 -8 6 2z" fill="#ffe27a"/>`;
   if (h("service")) s += `<rect x="342" y="236" width="44" height="5" fill="#6b3f1d"/><rect x="346" y="241" width="3" height="21" fill="#6b3f1d"/><rect x="379" y="241" width="3" height="21" fill="#6b3f1d"/>
@@ -105,11 +112,17 @@ function drawGround(owned){
   if (h("fauteuil")) s += `<rect x="18" y="226" width="64" height="34" rx="6" fill="#7a1f26"/><rect x="14" y="236" width="12" height="26" rx="5" fill="#5e161c"/><rect x="74" y="236" width="12" height="26" rx="5" fill="#5e161c"/>
     <rect x="24" y="246" width="52" height="12" rx="3" fill="#8f2830"/>${[30,42,54,66].map(x=>`<circle cx="${x}" cy="236" r="1.5" fill="#3a0c10"/>`).join("")}`;
   if (h("gramophone")) s += `<rect x="104" y="232" width="36" height="30" fill="#6b3f1d"/><rect x="108" y="226" width="28" height="6" fill="#3b2412"/>
-    <line x1="126" y1="226" x2="130" y2="206" stroke="#c99a2e" stroke-width="2.5"/><path d="M130 206 l18 -22 q6 10 -2 26z" fill="#c99a2e" stroke="#8a6a1e"/>`;
+    <ellipse cx="122" cy="226" rx="12" ry="2.5" fill="#1c1c1c"/><path d="M122 226 l8 -5" stroke="#c99a2e" stroke-width="1.5"/>
+    <path d="M136 232 h6 v10 h-6z" fill="#c99a2e"/>
+    <g transform="translate(130 224) rotate(-50)"><path d="M0 -3 Q18 -4 38 -17 L38 17 Q18 4 0 3z" fill="#d9a92f" stroke="#8a6a1e" stroke-width="1"/>
+      <ellipse cx="38" cy="0" rx="5" ry="17" fill="#7a5a14" stroke="#8a6a1e" stroke-width="1"/><ellipse cx="38.5" cy="0" rx="2.5" ry="11" fill="#3b2a0a"/>
+      <path d="M6 -2.5 Q20 -3 34 -13" fill="none" stroke="#f2d97a" stroke-width="1.5"/></g>`;
   if (h("persan")) s += `<ellipse cx="200" cy="284" rx="100" ry="12" fill="#8a2c2c"/><ellipse cx="200" cy="284" rx="86" ry="8" fill="none" stroke="#2c4a8a" stroke-width="3"/>
     <ellipse cx="200" cy="284" rx="70" ry="5" fill="none" stroke="#e0b050" stroke-width="1.5" stroke-dasharray="4 3"/>`;
-  if (h("coussin")) s += `<g transform="translate(90 268)"><rect width="26" height="18" rx="3" fill="#1f3f8a"/><path d="M0 0 L26 18 M26 0 L0 18" stroke="#fff" stroke-width="4"/>
-    <path d="M0 0 L26 18 M26 0 L0 18" stroke="#c8102e" stroke-width="1.5"/><path d="M13 0 v18 M0 9 h26" stroke="#fff" stroke-width="6"/><path d="M13 0 v18 M0 9 h26" stroke="#c8102e" stroke-width="3"/></g>`;
+  if (h("drapeau")) s += `<ellipse cx="96" cy="258" rx="9" ry="3" fill="#3b2412"/><line x1="96" y1="258" x2="96" y2="164" stroke="#6b3f1d" stroke-width="3"/><circle cx="96" cy="162" r="3" fill="#c99a2e"/>
+    <svg x="60" y="167" width="36" height="18" viewBox="0 0 60 30" preserveAspectRatio="none"><rect width="60" height="30" fill="#1f3f8a"/>
+      <path d="M0 0 L60 30 M60 0 L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0 L60 30 M60 0 L0 30" stroke="#c8102e" stroke-width="2"/>
+      <path d="M30 0 V30 M0 15 H60" stroke="#fff" stroke-width="10"/><path d="M30 0 V30 M0 15 H60" stroke="#c8102e" stroke-width="6"/></svg>`;
   return s;
 }
 
@@ -132,12 +145,18 @@ function drawUpstairs(owned){
     <path d="M41 96 q12 -16 24 0z" fill="#f0ece4"/><circle cx="53" cy="80" r="9" fill="#f0ece4"/><path d="M46 76 q7 -8 14 0" fill="none" stroke="#c9c1b2" stroke-width="2"/><path d="M50 87 q3 3 6 0" fill="none" stroke="#c9c1b2" stroke-width="2"/>`;
   if (h("machine")) s += `<rect x="130" y="96" width="92" height="6" fill="#6b3f1d"/><rect x="134" y="102" width="6" height="26" fill="#6b3f1d"/><rect x="212" y="102" width="6" height="26" fill="#6b3f1d"/>
     <path d="M160 96 l4 -12 h28 l4 12z" fill="#1c1c1c"/><rect x="166" y="78" width="24" height="8" fill="#f4f1ea"/>${[0,1,2,3,4].map(k=>`<circle cx="${167+k*5.5}" cy="92" r="1.5" fill="#cfcfcf"/>`).join("")}`;
-  if (h("violon")) s += `<g transform="rotate(-20 236 60)"><ellipse cx="236" cy="74" rx="11" ry="13" fill="#a0521d"/><ellipse cx="236" cy="54" rx="9" ry="10" fill="#a0521d"/>
-    <rect x="234" y="24" width="4" height="34" fill="#3b2412"/><path d="M233 66 q3 -4 6 0 M233 66 q3 4 6 0" fill="none" stroke="#3b2412"/></g>
-    <line x1="252" y1="22" x2="262" y2="96" stroke="#8a6a3a" stroke-width="2"/>`;
-  if (h("lit")) s += `<rect x="282" y="34" width="5" height="94" fill="#4a2a12"/><rect x="385" y="34" width="5" height="94" fill="#4a2a12"/><rect x="278" y="30" width="116" height="8" fill="#4a2a12"/>
-    <path d="M287 38 q10 30 0 60 h10 q-8 -30 -4 -60z M385 38 q-10 30 0 60 h-10 q8 -30 4 -60z" fill="#2c4a8a"/>
-    <rect x="290" y="96" width="94" height="22" fill="#f4f1ea"/><rect x="290" y="104" width="94" height="16" fill="#2c4a8a"/><rect x="292" y="90" width="22" height="10" rx="4" fill="#fff"/>`;
+  if (h("violon")) s += `<g transform="rotate(-20 236 60)">
+    <rect x="248" y="30" width="2" height="66" fill="#6b3f1d"/><line x1="249.5" y1="32" x2="249.5" y2="94" stroke="#f4f1ea" stroke-width="0.8"/>
+    <path d="M226 62 q-4 6 0 10 q-6 4 -4 12 q4 10 14 10 q10 0 14 -10 q2 -8 -4 -12 q4 -4 0 -10 q-4 -8 -10 -8 q-6 0 -10 8z" fill="#a0521d" stroke="#5a2a0d" stroke-width="1.2"/>
+    <rect x="233.5" y="26" width="5" height="40" fill="#1c1c1c"/><rect x="234.5" y="22" width="3" height="6" fill="#3b2412"/><circle cx="236" cy="20" r="3.5" fill="#6b3f1d"/>
+    <path d="M229 74 q-2 4 0 8 M243 74 q2 4 0 8" fill="none" stroke="#2a1408" stroke-width="1.6"/>
+    <rect x="231" y="76" width="10" height="2" fill="#e8d9b0"/><path d="M233 87 h6 l-3 9z" fill="#2a1408"/>
+    ${[234.7, 235.6, 236.4, 237.3].map(x=>`<line x1="${x}" y1="22" x2="${x}" y2="90" stroke="#e8e8e8" stroke-width="0.6"/>`).join("")}</g>`;
+  if (h("lit")) s += `<rect x="282" y="34" width="5" height="100" fill="#4a2a12"/><rect x="385" y="34" width="5" height="100" fill="#4a2a12"/><rect x="278" y="30" width="116" height="8" fill="#4a2a12"/>
+    <path d="M287 38 q10 30 0 54 h10 q-8 -28 -4 -54z M385 38 q-10 30 0 54 h-10 q8 -28 4 -54z" fill="#2c4a8a"/>
+    <rect x="287" y="112" width="98" height="12" fill="#6b3f1d" stroke="#3b2412" stroke-width="1.5"/>
+    ${[0,1,2].map(k=>`<rect x="${292+k*30}" y="115" width="26" height="6" fill="#8a5a2b"/>`).join("")}
+    <rect x="288" y="94" width="96" height="18" fill="#f4f1ea"/><rect x="288" y="102" width="96" height="10" fill="#2c4a8a"/><rect x="291" y="88" width="22" height="9" rx="4" fill="#fff" stroke="#d8d2c4"/>`;
   return s;
 }
 
@@ -215,13 +234,20 @@ function drawScene(owned, equipped){
 /* ---------- Rue de Londres (extérieur) ---------- */
 function drawStreet(owned){
   const h = id => owned.includes(id);
-  let s = `<svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="La rue de l'inspecteur Bramble">
+  let s = `<svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="La rue de l'inspecteur Bramble">
     <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa8b5"/><stop offset="1" stop-color="#dfe4e8"/></linearGradient>
       <pattern id="brick" width="16" height="8" patternUnits="userSpaceOnUse"><rect width="16" height="8" fill="#9c4a32"/><path d="M0 7.5 h16 M8 0 v4 M0 4 h16 M0 4 v4 M16 4 v4" stroke="#7a3624" stroke-width="1"/></pattern></defs>
-    <rect width="400" height="220" fill="url(#sky)"/>
-    <ellipse cx="80" cy="26" rx="40" ry="10" fill="#f0f2f4"/><ellipse cx="290" cy="18" rx="50" ry="9" fill="#f0f2f4"/>`;
-  if (h("bigben")) s += `<g fill="#b8a27a" stroke="#6b5a3a"><rect x="346" y="40" width="26" height="90"/><path d="M344 40 l15 -30 l15 30z"/></g>
-    <circle cx="359" cy="56" r="8" fill="#f4f1ea" stroke="#3b2412"/><path d="M359 56 v-5 M359 56 l4 2" stroke="#000" stroke-width="1.2"/><line x1="359" y1="10" x2="359" y2="2" stroke="#6b5a3a" stroke-width="2"/>`;
+    <rect width="400" height="250" fill="url(#sky)"/>
+    <ellipse cx="60" cy="26" rx="40" ry="10" fill="#f0f2f4"/><ellipse cx="190" cy="12" rx="40" ry="7" fill="#f0f2f4"/>`;
+  if (h("bigben")) s += `<g fill="#b8a27a" stroke="#6b5a3a"><rect x="356" y="40" width="26" height="90"/><path d="M354 40 l15 -30 l15 30z"/></g>
+    <circle cx="369" cy="56" r="8" fill="#f4f1ea" stroke="#3b2412"/><path d="M369 56 v-5 M369 56 l4 2" stroke="#000" stroke-width="1.2"/><line x1="369" y1="10" x2="369" y2="2" stroke="#6b5a3a" stroke-width="2"/>`;
+  if (h("dirigeable")) s += `<g transform="translate(300 26)"><path d="M-30 -2 l-10 -10 l2 10 l-2 10 z" fill="#8a96a3"/><path d="M-26 -4 l-6 -12 l8 5z M-26 4 l-6 12 l8 -5z" fill="#6f7b88"/>
+    <ellipse cx="0" cy="0" rx="34" ry="12" fill="#e9dfc4" stroke="#8a7a52" stroke-width="1.5"/>
+    ${[-20,-10,0,10,20].map(x=>`<path d="M${x} ${(-11.5*Math.sqrt(1-(x/34)**2)).toFixed(1)} q3 11 0 ${(23*Math.sqrt(1-(x/34)**2)).toFixed(1)}" fill="none" stroke="#b8a27a" stroke-width="0.8"/>`).join("")}
+    <path d="M-30 1 q30 5 60 0" fill="none" stroke="#c8102e" stroke-width="2"/>
+    <line x1="-10" y1="11" x2="-10" y2="16" stroke="#555"/><line x1="10" y1="11" x2="10" y2="16" stroke="#555"/>
+    <rect x="-14" y="16" width="28" height="8" rx="2" fill="#6b3f1d" stroke="#3b2412"/>${[-9,-3,3,9].map(x=>`<rect x="${x-1.5}" y="18" width="3" height="3" fill="#bfe3f0"/>`).join("")}
+    <line x1="-14" y1="20" x2="-19" y2="20" stroke="#555" stroke-width="1.5"/><path d="M-21 15 v10" stroke="#333" stroke-width="1.5"/></g>`;
   // Maisons voisines et façade de l'appartement
   s += `<rect x="0" y="50" width="105" height="125" fill="#c9b79a"/><rect x="275" y="70" width="125" height="105" fill="#d8d2c4"/>
     ${[18,62].map(x=>`<rect x="${x}" y="70" width="24" height="30" fill="#5a6a78"/><rect x="${x}" y="120" width="24" height="30" fill="#5a6a78"/>`).join("")}
@@ -234,8 +260,8 @@ function drawStreet(owned){
     <circle cx="200" cy="142" r="2" fill="#c99a2e"/><text x="190" y="132" font-size="8" fill="#c99a2e" text-anchor="middle" font-family="serif">221B</text>
     <rect x="166" y="170" width="48" height="5" fill="#cfcfcf"/>
     ${[220,232,244,256,268].map(x=>`<line x1="${x}" y1="152" x2="${x}" y2="175" stroke="#111" stroke-width="2"/>`).join("")}<line x1="216" y1="152" x2="272" y2="152" stroke="#111" stroke-width="2"/>
-    <rect y="175" width="400" height="12" fill="#a9a9a3"/><rect y="187" width="400" height="33" fill="#4a4a4e"/>
-    ${[20,90,160,230,300,370].map(x=>`<rect x="${x}" y="202" width="30" height="3" fill="#e8e8e8"/>`).join("")}`;
+    <rect y="175" width="400" height="12" fill="#a9a9a3"/><rect y="187" width="400" height="63" fill="#4a4a4e"/>
+    ${[20,90,160,230,300,370].map(x=>`<rect x="${x}" y="244" width="30" height="3" fill="#e8e8e8"/>`).join("")}`;
   if (h("plaque")) s += `<circle cx="252" cy="122" r="11" fill="#1f5aa8" stroke="#fff" stroke-width="1.5"/><path d="M245 120 h14 M246 124 h12 M248 128 h8" stroke="#fff" stroke-width="1.2"/>`;
   if (h("jardinieres")) s += [125,215].map(x=>`<rect x="${x-2}" y="91" width="44" height="7" fill="#3b2412"/>` +
     [0,1,2,3,4,5].map(k=>`<circle cx="${x+3+k*7}" cy="89" r="3" fill="${["#c8102e","#f2c94c","#d36ac2"][k%3]}"/>`).join("")).join("");
@@ -247,17 +273,56 @@ function drawStreet(owned){
     ${[322,338,354,370,386].map(x=>`<path d="M${x-8} 142 l8 -14 h8 l-8 14z" fill="#fff"/>`).join("")}
     <text x="355" y="160" font-size="8" fill="#1f3f6a" text-anchor="middle" font-family="sans-serif">FISH &amp; CHIPS</text>
     <circle cx="329" cy="181" r="4" fill="#222"/><circle cx="381" cy="181" r="4" fill="#222"/>`;
-  if (h("fiacre")) s += `<g transform="translate(14 160)"><path d="M28 6 h32 v24 h-36z" fill="#1c1c1c"/><path d="M26 6 q16 -10 36 0" fill="#1c1c1c"/><rect x="32" y="10" width="16" height="12" fill="#9fb3c3"/>
-    <circle cx="44" cy="34" r="11" fill="none" stroke="#3b2412" stroke-width="3"/><path d="M44 23 v22 M33 34 h22" stroke="#3b2412"/>
-    <path d="M60 22 h28" stroke="#3b2412" stroke-width="2"/><ellipse cx="96" cy="26" rx="12" ry="7" fill="#6b3f1d"/><path d="M104 22 l8 -12 l4 4 l-6 10z" fill="#6b3f1d"/>
-    ${[88,92,100,104].map(x=>`<line x1="${x}" y1="30" x2="${x}" y2="44" stroke="#6b3f1d" stroke-width="2.5"/>`).join("")}</g>`;
-  if (h("blackcab")) s += `<g transform="translate(150 174)"><path d="M4 30 v-12 q0 -6 8 -6 h10 l10 -12 h30 l10 12 h12 q8 0 8 8 v10z" fill="#151515"/>
-    <rect x="36" y="3" width="14" height="10" fill="#9fb3c3"/><rect x="54" y="3" width="14" height="10" fill="#9fb3c3"/><rect x="44" y="-4" width="12" height="4" fill="#f2c94c"/>
-    <circle cx="22" cy="32" r="7" fill="#222" stroke="#999" stroke-width="2"/><circle cx="76" cy="32" r="7" fill="#222" stroke="#999" stroke-width="2"/></g>`;
-  if (h("bus")) s += `<g transform="translate(268 136)"><rect width="120" height="70" rx="6" fill="#c8102e"/>
-    ${[0,1,2,3,4].map(k=>`<rect x="${8+k*22}" y="8" width="18" height="16" fill="#cfe3ee"/><rect x="${8+k*22}" y="36" width="18" height="16" fill="#cfe3ee"/>`).join("")}
-    <rect y="28" width="120" height="4" fill="#f2c94c"/><rect x="88" y="0" width="30" height="6" fill="#1c1c1c"/>
-    <circle cx="24" cy="70" r="9" fill="#222" stroke="#999" stroke-width="2"/><circle cx="96" cy="70" r="9" fill="#222" stroke="#999" stroke-width="2"/></g>`;
+  // Véhicules sur la chaussée (tous tournés vers la droite), au-dessous du trottoir : rien ne cache les boutiques
+  if (h("fiacre")) s += `<g transform="translate(6 195) scale(0.9)">
+    <path d="M62 26 C50 26 44 34 38 34" fill="none" stroke="#3b2412" stroke-width="2"/><line x1="40" y1="33" x2="84" y2="33" stroke="#3b2412" stroke-width="2.5"/>
+    <path d="M8 8 h12 v6 h-12z" fill="#3b2412"/><circle cx="14" cy="2" r="3.2" fill="${SKIN}"/><rect x="10.5" y="-4" width="7" height="5" fill="#111"/><rect x="11" y="5" width="6" height="4" fill="#5a3a1a"/>
+    <path d="M12 16 h38 v22 h-42z" fill="#1c1c1c"/><path d="M9 17 q22 -16 44 0z" fill="#1c1c1c"/><rect x="31" y="21" width="15" height="10" fill="#9fb3c3"/><line x1="26" y1="18" x2="26" y2="38" stroke="#4a4a4a"/>
+    <circle cx="30" cy="40" r="12" fill="none" stroke="#3b2412" stroke-width="3"/>${[0,45,90,135].map(a=>`<line x1="${(30-11*Math.cos(a*Math.PI/180)).toFixed(1)}" y1="${(40-11*Math.sin(a*Math.PI/180)).toFixed(1)}" x2="${(30+11*Math.cos(a*Math.PI/180)).toFixed(1)}" y2="${(40+11*Math.sin(a*Math.PI/180)).toFixed(1)}" stroke="#3b2412"/>`).join("")}<circle cx="30" cy="40" r="2" fill="#c99a2e"/>
+    <path d="M70 22 q-12 4 -8 22" fill="none" stroke="#2a1a0c" stroke-width="3.5" stroke-linecap="round"/>
+    <ellipse cx="82" cy="29" rx="18" ry="9" fill="#7a4a22"/>
+    <path d="M94 24 L104 4 L113 8 L106 30z" fill="#7a4a22"/><path d="M99 8 q-4 6 -2 16" fill="none" stroke="#2a1a0c" stroke-width="3"/>
+    <ellipse cx="115" cy="12" rx="12" ry="5.2" fill="#7a4a22" transform="rotate(38 115 12)"/><path d="M106 4 l2 -7 l3 6z" fill="#7a4a22"/>
+    <circle cx="113" cy="9" r="1.2" fill="#000"/><circle cx="123" cy="19" r="1" fill="#2a1a0c"/>
+    <path d="M94 22 q4 6 0 12" fill="none" stroke="#3b2412" stroke-width="2"/>
+    ${[68,74,90,96].map(x=>`<rect x="${x}" y="33" width="3.6" height="19" fill="#7a4a22"/><rect x="${x}" y="49" width="3.6" height="3" fill="#1c1c1c"/>`).join("")}</g>`;
+  if (h("taxi")) {
+    // Voiture d'époque (type Ford T, années 1920) : capote en toile, carrosserie haute,
+    // roues à rayons en bois, garde-boue noirs, marchepied, radiateur et phare en laiton.
+    const wheel = cx => `<circle cx="${cx}" cy="38.5" r="13" fill="#ead9aa" stroke="#1c1c1c" stroke-width="3"/>` +
+      [0, 30, 60, 90, 120, 150].map(a => { const dx = (10 * Math.cos(a * Math.PI / 180)).toFixed(1), dy = (10 * Math.sin(a * Math.PI / 180)).toFixed(1);
+        return `<line x1="${cx - dx}" y1="${(38.5 - dy).toFixed(1)}" x2="${(cx + +dx).toFixed(1)}" y2="${(38.5 + +dy).toFixed(1)}" stroke="#8a5a2b" stroke-width="1.1"/>`; }).join("") +
+      `<circle cx="${cx}" cy="38.5" r="2.6" fill="#c99a2e"/>`;
+    s += `<g transform="translate(138 194) scale(0.85)">
+      <rect x="3" y="1" width="60" height="5" rx="2.5" fill="#1c1c1c"/>
+      <line x1="7" y1="6" x2="7" y2="13" stroke="#1c1c1c" stroke-width="2.5"/><line x1="59" y1="6" x2="59" y2="13" stroke="#1c1c1c" stroke-width="2.5"/>
+      <rect x="5" y="12" width="56" height="26" rx="3" fill="#1c1c1c"/>
+      <rect x="11" y="14" width="20" height="9" fill="#bfe3f0" stroke="#4a1216" stroke-width="1.5"/>
+      <rect x="36" y="14" width="19" height="9" fill="#bfe3f0" stroke="#4a1216" stroke-width="1.5"/>
+      <line x1="33.5" y1="12" x2="33.5" y2="38" stroke="#4a1216" stroke-width="1.5"/><circle cx="31.5" cy="29" r="1.2" fill="#c99a2e"/>
+      <path d="M60 8 l5 -1 v16 h-5z" fill="#bfe3f0" stroke="#c99a2e" stroke-width="1.5"/>
+      <path d="M61 25 h42 v13 h-42z" fill="#1c1c1c"/><line x1="61" y1="25" x2="103" y2="25" stroke="#4a1216" stroke-width="2"/>
+      ${[68, 73, 78].map(x => `<line x1="${x}" y1="28" x2="${x}" y2="34" stroke="#4a1216" stroke-width="1.4"/>`).join("")}
+      <rect x="103" y="19" width="7" height="19" rx="1.5" fill="#c99a2e"/><line x1="106.5" y1="21" x2="106.5" y2="36" stroke="#8a6a1e" stroke-width="1"/>
+      <circle cx="100" cy="17" r="4" fill="#c99a2e"/><circle cx="100" cy="17" r="2.3" fill="#fff6c0"/><rect x="97" y="20" width="6" height="2" fill="#1c1c1c"/>
+      <rect x="9" y="39" width="94" height="3" fill="#1c1c1c"/>
+      ${wheel(23)}${wheel(88)}
+      <path d="M7 40 A16 16 0 0 1 39 40" fill="none" stroke="#1c1c1c" stroke-width="3.2"/>
+      <path d="M72 40 A16 16 0 0 1 104 40" fill="none" stroke="#1c1c1c" stroke-width="3.2"/>
+    </g>`;
+  }
+  if (h("bus")) s += `<g transform="translate(266 197) scale(0.82)">
+    <rect x="10" y="4" width="88" height="22" fill="#c8102e" stroke="#8a0a1e" stroke-width="1.5"/>
+    ${[0,1,2,3,4].map(k=>`<rect x="${15+k*16}" y="9" width="12" height="11" fill="#cfe3ee" stroke="#8a0a1e"/>`).join("")}
+    <rect x="10" y="26" width="88" height="22" fill="#c8102e" stroke="#8a0a1e" stroke-width="1.5"/><rect x="10" y="22" width="88" height="4" fill="#f4f1ea"/>
+    ${[0,1,2,3].map(k=>`<rect x="${15+k*20}" y="30" width="14" height="12" fill="#cfe3ee" stroke="#8a0a1e"/>`).join("")}
+    <rect x="98" y="2" width="12" height="26" fill="#c8102e" stroke="#8a0a1e" stroke-width="1.5"/><rect x="100" y="6" width="8" height="10" fill="#cfe3ee" stroke="#8a0a1e"/>
+    <path d="M98 30 h14 l8 4 v14 h-22z" fill="#a50d26" stroke="#8a0a1e" stroke-width="1.5"/><rect x="112" y="34" width="6" height="10" fill="#c99a2e"/><circle cx="119" cy="38" r="3.5" fill="#fff6c0" stroke="#8a6a1e"/>
+    <circle cx="104" cy="22" r="3" fill="${SKIN}"/><rect x="101" y="25" width="6" height="5" fill="#2c3e6a"/>
+    <rect x="12" y="-2" width="30" height="6" fill="#f4f1ea" stroke="#8a0a1e"/><text x="27" y="3" font-size="4" text-anchor="middle" fill="#8a0a1e" font-family="sans-serif">LONDON</text>
+    <path d="M10 48 L2 26 M10 26 L2 26 M6 38 L10 38" stroke="#333" stroke-width="1.6" fill="none"/><path d="M2 26 L10 4" stroke="#333" stroke-width="1.6"/><rect x="0" y="46" width="12" height="3" fill="#4a4a4a"/>
+    <circle cx="28" cy="50" r="8.5" fill="#222" stroke="#999" stroke-width="2"/><circle cx="28" cy="50" r="2.5" fill="#bbb"/>
+    <circle cx="100" cy="50" r="7.5" fill="#222" stroke="#999" stroke-width="2"/><circle cx="100" cy="50" r="2.2" fill="#bbb"/></g>`;
   return s + "</svg>";
 }
 
