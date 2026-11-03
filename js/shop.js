@@ -317,23 +317,27 @@ function drawStreet(owned){
   s += `<rect x="0" y="50" width="105" height="125" fill="#c9b79a"/>${[58,68,78,88,98,108,118,128,138,148,158,168].map(y => `<line x1="0" y1="${y}" x2="105" y2="${y}" stroke="#b8a584" stroke-width="0.8"/>`).join("")}
     ${chimney(14, 24, 20)}${chimney(72, 28, 16)}<path d="M-2 52 L2 36 H103 L107 52z" fill="#4a4f5a"/>${[0,1,2,3,4,5,6,7,8,9,10].map(k => `<path d="M${k * 10} 37 v14" stroke="#383c46" stroke-width="0.8"/>`).join("")}
     <rect x="-2" y="50" width="109" height="6" fill="#e8dfc8" stroke="#a89878" stroke-width="0.6"/>${[...Array(18)].map((_, k) => `<rect x="${k * 6 - 1}" y="56" width="3" height="2.5" fill="#d3c8a8"/>`).join("")}
-    ${win(10, 66, 22, 28, { cur: "#a8323a", lit: true })}${win(42, 66, 22, 28, { shut: true })}${win(76, 66, 22, 28, { cur: "#d9c8a0" })}
+    ${win(16, 66, 22, 28, { cur: "#a8323a", lit: true })}${win(66, 66, 22, 28, { shut: true })}
     ${win(12, 138, 24, 24, { shut: true, cur: "#a8323a" })}${door(60, 132, 24, 43, "#2e5a3a")}
     <rect x="102" y="52" width="3" height="123" fill="#5a5a5a"/>
     <rect x="275" y="70" width="125" height="105" fill="#d8cdb0"/>${[78,88,98,108,118,128,138,148,158,168].map(y => `<line x1="275" y1="${y}" x2="400" y2="${y}" stroke="#c4b896" stroke-width="0.8"/>`).join("")}
     ${chimney(286, 50, 20)}${chimney(310, 56, 14)}<rect x="273" y="68" width="127" height="7" fill="#e8dfc8" stroke="#a89878" stroke-width="0.6"/>${[...Array(21)].map((_, k) => `<rect x="${275 + k * 6}" y="75" width="3" height="2.5" fill="#cbbf9c"/>`).join("")}
     <rect x="275" y="76" width="5" height="99" fill="#cfc3a0"/><rect x="395" y="76" width="5" height="99" fill="#cfc3a0"/>
-    ${win(288, 86, 20, 28, { cur: "#6a2c8a", lit: true })}${win(322, 86, 20, 28, { shut: true })}${win(356, 86, 20, 28, { cur: "#a8323a" })}
+    ${win(297, 86, 20, 28, { cur: "#6a2c8a", lit: true })}${win(353, 86, 20, 28, { shut: true })}
     ${win(290, 140, 22, 24, { cur: "#6a2c8a", lit: true })}${door(346, 130, 26, 45, "#1f3f6a")}
-    <rect x="318" y="118" width="28" height="3" fill="#2a2a2a"/>${[0,1,2,3,4,5].map(k => `<line x1="${320 + k * 5}" y1="109" x2="${320 + k * 5}" y2="118" stroke="#2a2a2a" stroke-width="1"/>`).join("")}<path d="M318 109 h28" stroke="#2a2a2a" stroke-width="1"/>
+    <rect x="349" y="118" width="28" height="3" fill="#2a2a2a"/>${[0,1,2,3,4,5].map(k => `<line x1="${351 + k * 5}" y1="109" x2="${351 + k * 5}" y2="118" stroke="#2a2a2a" stroke-width="1"/>`).join("")}<path d="M349 109 h28" stroke="#2a2a2a" stroke-width="1"/>
     <rect x="272" y="76" width="3" height="99" fill="#5a5a5a"/>
     <rect x="105" y="30" width="170" height="145" fill="url(#brick)"/>
     <rect x="105" y="105" width="170" height="70" fill="#efe9dc"/><rect x="100" y="24" width="180" height="8" fill="#efe9dc"/><rect x="100" y="102" width="180" height="5" fill="#d8cfbc"/>
-    ${bigwin(125, 45, 40, 46)}${bigwin(215, 45, 40, 46)}${bigwin(120, 118, 40, 38)}
+    ${bigwin(128, 49, 34, 40)}${bigwin(218, 49, 34, 40)}${bigwin(123, 122, 34, 32)}
     <rect x="172" y="112" width="36" height="58" fill="#111"/><path d="M172 112 q18 -14 36 0z" fill="#9fb3c3" stroke="#efe9dc" stroke-width="2"/>
     <circle cx="200" cy="142" r="2" fill="#c99a2e"/><text x="190" y="132" font-size="8" fill="#c99a2e" text-anchor="middle" font-family="serif">221B</text>
     <rect x="166" y="170" width="48" height="5" fill="#cfcfcf"/>
-    ${[220,232,244,256,268].map(x=>`<line x1="${x}" y1="152" x2="${x}" y2="175" stroke="#111" stroke-width="2"/>`).join("")}<line x1="216" y1="152" x2="272" y2="152" stroke="#111" stroke-width="2"/>
+    <rect x="213" y="172" width="62" height="4" fill="#a9a9a3" stroke="#8a8a84" stroke-width="0.5"/>
+    <rect x="214" y="156" width="60" height="2.2" fill="#111"/><rect x="214" y="166" width="60" height="2.2" fill="#111"/>
+    ${[...Array(12)].map((_, k) => `<line x1="${216.5 + k * 5.1}" y1="158" x2="${216.5 + k * 5.1}" y2="172" stroke="#111" stroke-width="1.3"/><path d="M${214.8 + k * 5.1} 158 l1.7 -5 l1.7 5z" fill="#111"/>`).join("")}
+    ${[...Array(5)].map((_, k) => `<circle cx="${219 + k * 12.3}" cy="162" r="2.1" fill="none" stroke="#111" stroke-width="0.9"/>`).join("")}
+    ${[214.5, 244, 273.5].map(x => `<rect x="${x - 1.5}" y="152" width="3" height="21" fill="#111"/><circle cx="${x}" cy="150.5" r="2.6" fill="#111"/><rect x="${x - 3}" y="169" width="6" height="3" fill="#222"/>`).join("")}
     <rect y="175" width="400" height="12" fill="#a9a9a3"/><rect y="187" width="400" height="63" fill="#4a4a4e"/>
     ${[20,90,160,230,300,370].map(x=>`<rect x="${x}" y="244" width="30" height="3" fill="#e8e8e8"/>`).join("")}`;
   if (h("plaque")) s += `<circle cx="246" cy="128" r="20" fill="#f4f1ea" stroke="#9a9a92" stroke-width="1"/><circle cx="246" cy="128" r="18" fill="#1f5aa8"/><circle cx="246" cy="128" r="16.2" fill="none" stroke="#fff" stroke-width="0.8"/>
